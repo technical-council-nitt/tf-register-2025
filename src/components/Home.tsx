@@ -12,8 +12,10 @@ const Home = () => {
     const [isPartofTeam, setIsPartofTeam] = useState(false);
     const [userName, setUsername] = useState<string | undefined>(undefined);
     const [teamId, setTeamId] = useState<string | undefined>(undefined);
-    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+    const [alertMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(true); // New state to handle loading
+
+    
 
     // Ensure cookies are sent with requests
     axios.defaults.withCredentials = true;

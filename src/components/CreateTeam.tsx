@@ -24,8 +24,6 @@ const CreateTeam = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        const data = Object.fromEntries(formData.entries());
 
         // Using Create React App
         axios.get(`http://${process.env.PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })

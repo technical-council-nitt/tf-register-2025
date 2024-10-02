@@ -49,7 +49,7 @@ const schema = z.object({
 });
 
 const Profile = () => {
-  const [userDetails, setUserDetails] = useState<User | null>(null);
+  const [_, setUserDetails] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // Loading state to handle loading screen
 
   const form = useForm({
