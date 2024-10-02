@@ -8,6 +8,7 @@ import JoinTeam from './components/JoinTeam'
 import Payment from './components/Payment'
 
 export default function App() {
+	// hello
   return (
     <div>
 		<Router>
