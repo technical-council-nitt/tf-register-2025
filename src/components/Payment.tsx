@@ -26,7 +26,7 @@ const Payment = () => {
     formData.append('screenshot', screenshot);
 
     try {
-      const response = await axios.post(`http://${process.env['PROD-URL-BACKEND']}/team/${teamId}/pay`, formData, {
+      const response = await axios.post(`http://${process.env['PROD_URL_BACKEND']}/team/${teamId}/pay`, formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',

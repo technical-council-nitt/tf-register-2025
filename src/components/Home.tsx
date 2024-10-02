@@ -26,14 +26,14 @@ const Home = () => {
 
     useEffect(() => {
         setLoading(true); // Start loading when the component mounts
-        axios.get(`http://${process.env['PROD-URL-BACKEND']}/auth/is-logged-in`)
+        axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`)
         .then(response => {
             setLoggedIn(response.data.success);
             setUsername(response.data.username);
 
             // Only fetch profile data if the user is logged in
             if (response.data.success) {
-                axios.get(`http://${process.env['PROD-URL-BACKEND']}/profile/get-data`, { withCredentials: true })
+                axios.get(`http://${process.env['PROD_URL_BACKEND']}/profile/get-data`, { withCredentials: true })
                 .then(response => {
                     console.log(response.data);
 

@@ -5,7 +5,7 @@ import axios from "axios";
 const Login = () => {
     const handleLogin = async () => {
         try {
-            const response = await axios.get(`http://${process.env['PROD-URL-BACKEND']}/auth/get-url`);
+            const response = await axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/get-url`);
             console.log(response);
             window.location.href = response.data.url; // Redirect to Google OAuth consent screen
         } catch (error) {

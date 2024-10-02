@@ -13,7 +13,7 @@ const JoinTeam = () => {
   const [userName, setUsername] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    axios.get(`http://${process.env['PROD-URL-BACKEND']}/auth/is-logged-in`, { withCredentials: true })
+    axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`, { withCredentials: true })
       .then(response => {
         setUsername(response.data.username);
       })
@@ -34,7 +34,7 @@ const JoinTeam = () => {
     }
     
     try {
-      const response = await axios.post(`http://${process.env['PROD-URL-BACKEND']}/team/join`, { uniqueId: teamCode }, { withCredentials: true });
+      const response = await axios.post(`http://${process.env['PROD_URL_BACKEND']}/team/join`, { uniqueId: teamCode }, { withCredentials: true });
       setAlertMessage(response.data.message);
       if (response.data.success) window.location.href = "/";
     } catch (error) {

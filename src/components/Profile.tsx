@@ -68,7 +68,7 @@ const Profile = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`http://${process.env['PROD-URL-BACKEND']}/profile/get-data`, { withCredentials: true });
+        const response = await axios.get(`http://${process.env['PROD_URL_BACKEND']}/profile/get-data`, { withCredentials: true });
         const userData = response.data.details;
         setUserDetails(userData);
 
@@ -93,7 +93,7 @@ const Profile = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post(`http://${process.env['PROD-URL-BACKEND']}/profile/update`, data, { withCredentials: true });
+      const response = await axios.post(`http://${process.env['PROD_URL_BACKEND']}/profile/update`, data, { withCredentials: true });
       if (response.data.success) {
         window.location.href = "/";
       }

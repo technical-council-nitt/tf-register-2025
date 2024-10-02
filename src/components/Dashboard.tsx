@@ -26,10 +26,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     setIsLoading(true); // Start loading
-    axios.get(`http://${process.env['PROD-URL-BACKEND']}/auth/is-logged-in`, { withCredentials: true })
+    axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`, { withCredentials: true })
       .then(response => {
         setUsername(response.data.username);
-        return axios.get(`http://${process.env['PROD-URL-BACKEND']}/team/${teamId}`, { withCredentials: true });
+        return axios.get(`http://${process.env['PROD_URL_BACKEND']}/team/${teamId}`, { withCredentials: true });
       })
       .then((response) => {
         console.log("Team data fetched successfully:", response.data);

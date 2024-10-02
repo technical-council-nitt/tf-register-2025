@@ -13,7 +13,7 @@ const CreateTeam = () => {
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        axios.get(`http://${process.env['PROD-URL-BACKEND']}/auth/is-logged-in`, { withCredentials: true })
+        axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`, { withCredentials: true })
             .then(response => {
                 setUsername(response.data.username);
             })
