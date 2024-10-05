@@ -13,7 +13,7 @@ const CreateTeam = () => {
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`, { withCredentials: true })
+        axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })
             .then(response => {
                 setUsername(response.data.username);
             })
@@ -24,23 +24,21 @@ const CreateTeam = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        // Using Create React App
-        axios.get(`http://${process.env.PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })
-
+        const formData = new FormData(e.target as HTMLFormElement);
+        const data = Object.fromEntries(formData.entries());
+        axios.post(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/team/create`, data, { withCredentials: true })
             .then(response => {
-              console.log(response.data);
-              if (response.data.success) {
-                window.location.href = '/';
-              } else {
-                setAlertMessage(response.data.message || "Error creating team");
-              }
+                console.log(response.data);
+                if (response.data.success) {
+                    window.location.href = '/';
+                } else {
+                    setAlertMessage(response.data.message || "Error creating team");
+                }
             })
             .catch(error => {
-              console.error(error);
-              setAlertMessage("Error creating team. Please try again.");
+                console.error(error);
+                setAlertMessage("Error creating team. Please try again.");
             });
-          
     }
 
     const getFirstLetter = (name: string | undefined) => {
@@ -50,7 +48,8 @@ const CreateTeam = () => {
     return (
         <div className="flex flex-col min-h-screen bg-black text-white">
             <nav className="flex justify-between items-center p-4 md:p-6">
-                <h1 className="text-2xl md:text-3xl font-bold">Transfinitte</h1>
+            <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+            <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -105,7 +104,7 @@ const CreateTeam = () => {
                                 className="bg-[#2a2a2a] text-white border border-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
-                        
+
                         <Button type="submit" className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2">
                             <span>Create Team</span>
                             <ArrowUpRight className="h-5 w-5" />

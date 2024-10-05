@@ -56,7 +56,8 @@ export default {
   		},
   		fontFamily: {
 			poppins: ['Poppins', 'sans-serif'],
-			geist: ['Geist', 'sans-serif']
+			geist: ['Geist', 'sans-serif'],
+			spacegrotesk: ["Space Grotesk", 'sans-serif']
 		}
   	}
   },

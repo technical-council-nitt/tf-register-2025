@@ -13,9 +13,8 @@ const Home = () => {
     const [userName, setUsername] = useState<string | undefined>(undefined);
     const [teamId, setTeamId] = useState<string | undefined>(undefined);
     const [alertMessage] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true); // New state to handle loading
-
-    
+    const [loading, setLoading] = useState(true);
+    const [hasRollNumber, setHasRollNumber] = useState(false);
 
     // Ensure cookies are sent with requests
     axios.defaults.withCredentials = true;
@@ -25,38 +24,43 @@ const Home = () => {
     };
 
     useEffect(() => {
-        setLoading(true); // Start loading when the component mounts
-        axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`)
+        setLoading(true);
+        axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`)
         .then(response => {
+            console.log("Logged in: ", response.data)
             setLoggedIn(response.data.success);
             setUsername(response.data.username);
 
-            // Only fetch profile data if the user is logged in
             if (response.data.success) {
-                axios.get(`http://${process.env['PROD_URL_BACKEND']}/profile/get-data`, { withCredentials: true })
+                axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/profile/get-data`, { withCredentials: true })
                 .then(response => {
                     console.log(response.data);
 
-                    // Convert isPartofTeam to a boolean
                     const isPartofTeamValue = response.data.details.isPartofTeam === 'TRUE';
                     setIsPartofTeam(isPartofTeamValue);
-
-                    // Handle potential null or undefined teamId
                     setTeamId(response.data.details.teamId || undefined);
+                    
+                    // Check if roll number is set
+                    setHasRollNumber(!!response.data.details.rollNumber);
+
+                    // Redirect to profile if roll number is not set
+                    if (!response.data.details.rollNumber) {
+                        window.location.href = "/profile";
+                    }
                 })
                 .catch(error => {
                     console.error(error);
                 })
                 .finally(() => {
-                    setLoading(false); // Stop loading after data fetch completes
+                    setLoading(false);
                 });
             } else {
-                setLoading(false); // Stop loading if not logged in
+                setLoading(false);
             }
         })
         .catch(error => {
             console.error(error);
-            setLoading(false); // Stop loading in case of error
+            setLoading(false);
         });
     }, []);
 
@@ -64,7 +68,7 @@ const Home = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
               <Loader2 className="w-12 h-12 animate-spin mb-4" />
-              <p className="text-xl">Loading...</p>
+              <p className="text-xl"></p>
             </div>
         );
     }
@@ -72,7 +76,8 @@ const Home = () => {
     return (
         <div className="flex flex-col min-h-screen bg-black text-white">
             <nav className="flex justify-between items-center p-4 md:p-6">
-                <h1 className="text-2xl md:text-3xl font-bold">Transfinitte</h1>
+            <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+            <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
                 {isLoggedIn && (
                     <TooltipProvider>
                         <Tooltip>
@@ -96,7 +101,7 @@ const Home = () => {
 
             <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
                 <div className="w-full max-w-md space-y-6 text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold">Welcome to Transfinitte</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold">Welcome to TransfiNITTe</h2>
                     <p className="text-sm md:text-base">
                         Get ready for TransfiNITTe 2024 Hackathon.
                         Join a team or create your own to participate!
@@ -107,31 +112,41 @@ const Home = () => {
                         </Alert>
                     )}
                     {isLoggedIn ? (
-                        isPartofTeam && teamId ? (
-                            <Button 
+                        hasRollNumber ? (
+                            isPartofTeam && teamId ? (
+                                <Button 
+                                    className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
+                                    onClick={() => window.location.href = `/team/${teamId}`}
+                                >
+                                    <span>View Dashboard</span>
+                                    <ArrowUpRight className="h-5 w-5" />
+                                </Button>
+                            ) : (
+                                <div className="space-y-4">
+                                    <Button
+                                        className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
+                                        onClick={() => window.location.href = "/create-team"}
+                                    >
+                                        <span>Create Team</span>
+                                        <ArrowUpRight className="h-5 w-5" />
+                                    </Button>
+                                    <Button
+                                        className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
+                                        onClick={() => window.location.href = "/join-team"}
+                                    >
+                                        <span>Join Team</span>
+                                        <ArrowUpRight className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                            )
+                        ) : (
+                            <Button
                                 className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                                onClick={() => window.location.href = `/team/${teamId}`}
+                                onClick={() => window.location.href = "/profile"}
                             >
-                                <span>View Dashboard</span>
+                                <span>Complete Your Profile</span>
                                 <ArrowUpRight className="h-5 w-5" />
                             </Button>
-                        ) : (
-                            <div className="space-y-4">
-                                <Button
-                                    className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                                    onClick={() => window.location.href = "/create-team"}
-                                >
-                                    <span>Create Team</span>
-                                    <ArrowUpRight className="h-5 w-5" />
-                                </Button>
-                                <Button
-                                    className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                                    onClick={() => window.location.href = "/join-team"}
-                                >
-                                    <span>Join Team</span>
-                                    <ArrowUpRight className="h-5 w-5" />
-                                </Button>
-                            </div>
                         )
                     ) : (
                         <Button

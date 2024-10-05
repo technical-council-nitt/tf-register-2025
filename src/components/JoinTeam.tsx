@@ -13,7 +13,7 @@ const JoinTeam = () => {
   const [userName, setUsername] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`, { withCredentials: true })
+    axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })
       .then(response => {
         setUsername(response.data.username);
       })
@@ -34,7 +34,7 @@ const JoinTeam = () => {
     }
     
     try {
-      const response = await axios.post(`http://${process.env['PROD_URL_BACKEND']}/team/join`, { uniqueId: teamCode }, { withCredentials: true });
+      const response = await axios.post(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/team/join`, { uniqueId: teamCode }, { withCredentials: true });
       setAlertMessage(response.data.message);
       if (response.data.success) window.location.href = "/";
     } catch (error) {
@@ -50,7 +50,8 @@ const JoinTeam = () => {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <nav className="flex justify-between items-center p-4 md:p-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Transfinitte</h1>
+      <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+      <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>

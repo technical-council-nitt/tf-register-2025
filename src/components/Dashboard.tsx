@@ -3,14 +3,21 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { ArrowUpRight, Copy, Loader2 } from "lucide-react"; // Import Loader2 for loading UI
+import { Copy, Loader2 } from "lucide-react";
+
+type TeamMember = {
+  name: string;
+  email: string;
+  rollnumber: string;
+  pfp: string;
+};
 
 type Team = {
   name: string;
   uniqueId: string;
-  members: string[];
+  members: TeamMember[];
   paymentStatus: string;
   contactNumber: string;
   leaderName: string;
@@ -25,20 +32,21 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoading(true); // Start loading
-    axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/is-logged-in`, { withCredentials: true })
+    setIsLoading(true);
+    axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })
       .then(response => {
+        console.log("Logged: ", response.data)
         setUsername(response.data.username);
-        return axios.get(`http://${process.env['PROD_URL_BACKEND']}/team/${teamId}`, { withCredentials: true });
+        return axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/team/${teamId}`, { withCredentials: true });
       })
       .then((response) => {
         console.log("Team data fetched successfully:", response.data);
         setTeam(response.data.team);
-        setIsLoading(false); // Stop loading after data is fetched
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setIsLoading(false); // Stop loading on error
+        setIsLoading(false);
         setAlertMessage("Error fetching team data. Please try again.");
       });
   }, [teamId]);
@@ -50,7 +58,7 @@ const Dashboard = () => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setAlertMessage("Team ID copied to clipboard!");
-      setTimeout(() => setAlertMessage(null), 3000); // Clear message after 3 seconds
+      setTimeout(() => setAlertMessage(null), 3000);
     }, (err) => {
       console.error('Could not copy text: ', err);
       setAlertMessage("Failed to copy Team ID. Please try again.");
@@ -58,11 +66,10 @@ const Dashboard = () => {
   };
 
   if (isLoading) {
-    // Loading screen using Loader2
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
         <Loader2 className="w-12 h-12 animate-spin mb-4" />
-        <p className="text-xl">Loading...</p>
+        <p className="text-xl"></p>
       </div>
     );
   }
@@ -71,10 +78,13 @@ const Dashboard = () => {
     return <div className="flex justify-center items-center h-screen text-white">Team not found</div>;
   }
 
+  console.log("Team: ",team)
+
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <nav className="flex justify-between items-center p-4 md:p-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Transfinitte</h1>
+      <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+      <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -92,15 +102,63 @@ const Dashboard = () => {
         </TooltipProvider>
       </nav>
 
-      <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
-        <div className="w-full max-w-md space-y-6 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl md:text-4xl font-bold text-center">{team.name}</h2>
+      <main className="flex-grow flex flex-col items-center px-4 md:px-6 pt-8">
+        <div style={{
+          backgroundImage: `url('/team-card.svg')`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          // height: '216px',
+          width: '100%',
+          aspectRatio: '343 / 216',
+          position: "relative",
+        }}>
+          <h2 className="text-md md:text-md font-geist absolute bottom-0 left-0 p-6">{team.name}</h2>
+          <div className="absolute bottom-0 right-0 p-6 pb-4">
+                {team.paymentStatus !== "not paid" ? (
+                  <span className="text-green-400 font-semibold">{team.paymentStatus}</span>
+                ) : (
+                  <Button
+                    className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
+                    onClick={() => navigate(`/${team.uniqueId}/pay`)}
+                  >
+                    <img src="/pay.svg" />
+                  </Button>
+                )}
+              </div>
+        </div>
+        <div className="w-full max-w-md space-y-6 pt-3 mt-4">
+          <h1 className="font-spacegrotesk text-3xl font-medium space-y-2">Dashboard</h1>
+        </div>
+        <div className="w-full max-w-md space-y-6 pt-8">
           {alertMessage && (
             <Alert className="bg-green-500 text-white p-4 rounded-lg">
               <AlertDescription>{alertMessage}</AlertDescription>
             </Alert>
           )}
+
           <div className="space-y-4">
+            <div>
+              <ul className="space-y-2">
+                {team.members.map((member, index) => {
+                  console.log(member.pfp)
+                  return (
+                    <li key={index} className="flex items-center space-x-2">
+                      <Avatar>
+                        <AvatarImage src={member.pfp} height={10} width={10} />
+                        <AvatarFallback>{member.name.charAt(0).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="text-white text-[16px]">{member.name}</span>
+                        <span className="text-white text-[12px] opacity-60">{member.rollnumber}</span>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold">Payment Status:</span>
+            </div>
             <div className="flex justify-between items-center">
               <span className="font-semibold">Team ID:</span>
               <div className="flex items-center">
@@ -112,28 +170,6 @@ const Dashboard = () => {
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Team Members:</h3>
-              <ul className="list-disc list-inside space-y-1">
-                {team.members.map((member, index) => (
-                  <li key={index}>{member}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold">Payment Status:</span>
-              {team.paymentStatus !== "not paid" ? (
-                <span className="text-green-400 font-semibold">{team.paymentStatus}</span>
-              ) : (
-                <Button
-                  className="bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                  onClick={() => navigate(`/${team.uniqueId}/pay`)}
-                >
-                  <span>Pay Now</span>
-                  <ArrowUpRight className="h-5 w-5" />
-                </Button>
-              )}
             </div>
           </div>
         </div>

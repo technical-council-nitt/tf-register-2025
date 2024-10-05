@@ -5,9 +5,9 @@ import axios from "axios";
 const Login = () => {
     const handleLogin = async () => {
         try {
-            const response = await axios.get(`http://${process.env['PROD_URL_BACKEND']}/auth/get-url`);
+            const response = await axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/get-url`);
             console.log(response);
-            window.location.href = response.data.url; // Redirect to Google OAuth consent screen
+            window.location.href = response.data.url;
         } catch (error) {
             console.error('Error getting OAuth URL:', error);
         }
@@ -16,7 +16,8 @@ const Login = () => {
     return (
         <div className="flex flex-col min-h-screen bg-black text-white">
             <nav className="flex justify-between items-center p-4 md:p-6">
-                <h1 className="text-2xl md:text-3xl font-bold">Transfinitte</h1>
+            <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+            <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
             </nav>
 
             <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
