@@ -78,13 +78,13 @@ const Dashboard = () => {
     return <div className="flex justify-center items-center h-screen text-white">Team not found</div>;
   }
 
-  console.log("Team: ",team)
+  console.log("Team: ", team)
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
-      <nav className="flex justify-between items-center p-4 md:p-6">
-      <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
-      <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
+      <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800">
+        <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+        <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -114,17 +114,17 @@ const Dashboard = () => {
         }}>
           <h2 className="text-md md:text-md font-geist absolute bottom-0 left-0 p-6">{team.name}</h2>
           <div className="absolute bottom-0 right-0 p-6 pb-4">
-                {team.paymentStatus !== "not paid" ? (
-                  <span className="text-green-400 font-semibold">{team.paymentStatus}</span>
-                ) : (
-                  <Button
-                    className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                    onClick={() => navigate(`/${team.uniqueId}/pay`)}
-                  >
-                    <img src="/pay.svg" />
-                  </Button>
-                )}
-              </div>
+            {team.paymentStatus !== "not paid" ? (
+              <span className="text-green-400 font-semibold">{team.paymentStatus}</span>
+            ) : (
+              <Button
+                className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
+                onClick={() => navigate(`/${team.uniqueId}/pay`)}
+              >
+                <img src="/pay.svg" />
+              </Button>
+            )}
+          </div>
         </div>
         <div className="w-full max-w-md space-y-6 pt-3 mt-4">
           <h1 className="font-spacegrotesk text-3xl font-medium space-y-2">Dashboard</h1>
@@ -145,7 +145,7 @@ const Dashboard = () => {
                     <li key={index} className="flex items-center space-x-2">
                       <Avatar>
                         <AvatarImage src={member.pfp} height={10} width={10} />
-                        <AvatarFallback>{member.name.charAt(0).toUpperCase()}</AvatarFallback>
+                        <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
                         <span className="text-white text-[16px]">{member.name}</span>

@@ -21,6 +21,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react"; // Import Loader2 for loading UI
+import WaterDropGrid from "./WaterDropGrid";
 
 // Gender options
 const genders = [
@@ -119,17 +120,19 @@ const Profile = () => {
 
   return (
     <>
-    <nav className="flex justify-between bg-black items-center p-[15px] md:p-4">
+    <nav className="flex justify-between bg-black items-center p-[15px] md:p-4 border-b-[1px] border-neutral-800">
       <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
       <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
       <img src="/register.svg" alt="Logo" style={{ width: '110px', aspectRatio: '96 / 20' }} />
     </nav>
     <div className="flex">
-      <div className="bg-white w-full md:block hidden"></div>
+      <div className="bg-white w-full md:block hidden overflow-hidden">
+        <WaterDropGrid />
+      </div>
       <div className="flex flex-col w-full justify-center items-center min-h-screen bg-black p-4">
         <div className="flex self-start ml-4 mb-2 cursor-pointer">
           <img src="/left-arrow.svg" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
-          <div className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s]">GO BACK</div>
+          <a href="/" className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s]">GO BACK</a>
         </div>
         <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">Complete your Application</h1>
         <p className="md:text-xs mb-4 ml-4 text-left md:text-sm text-white">
