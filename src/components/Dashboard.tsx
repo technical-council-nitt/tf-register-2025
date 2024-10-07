@@ -160,58 +160,16 @@ const Dashboard = () => {
                   {team.members && team.members.map((member, index) => {
                     console.log(member.pfp)
                     return (
-                      <>
-                        <li key={index} className="flex items-center space-x-2 lg:bg-neutral-900 lg:rounded-lg lg:border-[1px] lg:border-neutral-600 lg:p-4">
-                          <Avatar>
-                            <AvatarImage src={member.pfp} height={10} width={10} />
-                            <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-white text-[16px]">{member.name}</span>
-                            <span className="text-white text-[12px] opacity-60">{member.roll_number}</span>
-                          </div>
-                        </li>
-                        <li key={index} className="flex items-center space-x-2 lg:bg-neutral-900 lg:rounded-lg lg:border-[1px] lg:border-neutral-600 lg:p-4">
-                          <Avatar>
-                            <AvatarImage src={member.pfp} height={10} width={10} />
-                            <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-white text-[16px]">{member.name}</span>
-                            <span className="text-white text-[12px] opacity-60">{member.roll_number}</span>
-                          </div>
-                        </li>
-                        <li key={index} className="flex items-center space-x-2 lg:bg-neutral-900 lg:rounded-lg lg:border-[1px] lg:border-neutral-600 lg:p-4">
-                          <Avatar>
-                            <AvatarImage src={member.pfp} height={10} width={10} />
-                            <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-white text-[16px]">{member.name}</span>
-                            <span className="text-white text-[12px] opacity-60">{member.roll_number}</span>
-                          </div>
-                        </li>
-                        <li key={index} className="flex items-center space-x-2 lg:bg-neutral-900 lg:rounded-lg lg:border-[1px] lg:border-neutral-600 lg:p-4">
-                          <Avatar>
-                            <AvatarImage src={member.pfp} height={10} width={10} />
-                            <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-white text-[16px]">{member.name}</span>
-                            <span className="text-white text-[12px] opacity-60">{member.roll_number}</span>
-                          </div>
-                        </li>
-                        <li key={index} className="flex items-center space-x-2 lg:bg-neutral-900 lg:rounded-lg lg:border-[1px] lg:border-neutral-600 lg:p-4">
-                          <Avatar>
-                            <AvatarImage src={member.pfp} height={10} width={10} />
-                            <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-white text-[16px]">{member.name}</span>
-                            <span className="text-white text-[12px] opacity-60">{member.roll_number}</span>
-                          </div>
-                        </li>
-                      </>
+                      <li key={index} className="flex items-center space-x-2 w-full lg:w-[35%] lg:bg-neutral-900 lg:rounded-lg lg:border-[1px] lg:border-neutral-600 lg:p-4">
+                        <Avatar>
+                          <AvatarImage src={member.pfp} height={10} width={10} />
+                          <AvatarFallback className="text-black">{member.name.charAt(0).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col">
+                          <span className="text-white text-[16px]">{member.name}</span>
+                          <span className="text-white text-[12px] opacity-60">{member.roll_number}</span>
+                        </div>
+                      </li>
                     )
                   })}
                 </ul>
