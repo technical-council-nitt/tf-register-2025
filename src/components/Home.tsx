@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 import { ArrowUpRight } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
+import { supabase } from "@/utiils/supabase";
 
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -16,7 +17,6 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [hasRollNumber, setHasRollNumber] = useState(false);
 
-    // Ensure cookies are sent with requests
     axios.defaults.withCredentials = true;
 
     const getFirstLetter = (name: string | undefined) => {
@@ -25,43 +25,67 @@ const Home = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`)
-        .then(response => {
-            console.log("Logged in: ", response.data)
-            setLoggedIn(response.data.success);
-            setUsername(response.data.username);
+        // axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`)
+        // .then(response => {
+        //     console.log("Logged in: ", response.data)
+        //     setLoggedIn(response.data.success);
+        //     setUsername(response.data.username);
 
-            if (response.data.success) {
-                axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/profile/get-data`, { withCredentials: true })
-                .then(response => {
-                    console.log(response.data);
+        //     if (response.data.success) {
+        //         axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/profile/get-data`, { withCredentials: true })
+        //         .then(response => {
+        //             console.log(response.data);
 
-                    const isPartofTeamValue = response.data.details.isPartofTeam === 'TRUE';
-                    setIsPartofTeam(isPartofTeamValue);
-                    setTeamId(response.data.details.teamId || undefined);
+        //             const isPartofTeamValue = response.data.details.isPartofTeam === 'TRUE';
+        //             setIsPartofTeam(isPartofTeamValue);
+        //             setTeamId(response.data.details.teamId || undefined);
                     
-                    // Check if roll number is set
-                    setHasRollNumber(!!response.data.details.rollNumber);
+        //             // Check if roll number is set
+        //             setHasRollNumber(!!response.data.details.rollNumber);
 
-                    // Redirect to profile if roll number is not set
-                    if (!response.data.details.rollNumber) {
-                        window.location.href = "/profile";
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-            } else {
+        //             // Redirect to profile if roll number is not set
+        //             if (!response.data.details.rollNumber) {
+        //                 window.location.href = "/profile";
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //         })
+        //         .finally(() => {
+        //             setLoading(false);
+        //         });
+        //     } else {
+        //         setLoading(false);
+        //     }
+        // })
+        // .catch(error => {
+        //     console.error(error);
+        //     setLoading(false);
+        // });
+        const fetchUser = async () => {
+            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            if (userError) {
+                console.error(userError);
                 setLoading(false);
+                return;
             }
-        })
-        .catch(error => {
-            console.error(error);
+            const { data: userData, error: userDataError } = await supabase.from('Users').select('*').eq('user_id', user?.id).single();
+            if (userDataError) {
+                console.error(userDataError);
+                setLoading(false);
+                return;
+            }
+            setLoggedIn(true);
+            setUsername(userData?.name);
+            setIsPartofTeam(userData?.in_team);
+            setTeamId(userData?.team_id);
+            setHasRollNumber(!!userData?.roll_number);
+            if (!userData?.roll_number) {
+                window.location.href = "/profile";
+            }
             setLoading(false);
-        });
+        }
+        fetchUser();
     }, []);
 
     if (loading) {

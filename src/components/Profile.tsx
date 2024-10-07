@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,11 +19,10 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react"; // Import Loader2 for loading UI
+import { Loader2 } from "lucide-react";
 import WaterDropGrid from "./WaterDropGrid";
-import Spline from '@splinetool/react-spline';
+import { supabase } from "@/utiils/supabase";
 
-// Gender options
 const genders = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
@@ -32,8 +30,7 @@ const genders = [
 ];
 
 type User = {
-  firstName: string;
-  lastName: string;
+  name: string;
   personalEmail: string;
   hostel: string;
   rollNumber: string;
@@ -43,9 +40,8 @@ type User = {
   mess: string;
 };
 
-// Zod schema for form validation
 const schema = z.object({
-  firstName: z.string().min(1, "Full Name is required"),
+  name: z.string().min(1, "Full Name is required"),
   rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
   personalEmail: z.string().email("Invalid email address"),
   hostel: z.string().nonempty("Hostel is required"),
@@ -55,13 +51,12 @@ const schema = z.object({
 
 const Profile = () => {
   const [_, setUserDetails] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state to handle loading screen
+  const [loading, setLoading] = useState<boolean>(true);
 
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       rollNumber: "",
       personalEmail: "",
       hostel: "",
@@ -70,47 +65,73 @@ const Profile = () => {
     },
   });
 
-  // Fetch user data and update form values
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/profile/get-data`, { withCredentials: true });
-        const userData = response.data.details;
-        setUserDetails(userData);
+        const {
+          data: { user },
+          error
+        } = await supabase.auth.getUser();
 
-        // Reset form values with the fetched user data
-        form.reset({
-          firstName: userData?.firstName || "",
-          lastName: userData?.lastName || "",
-          rollNumber: userData?.rollNumber || "",
-          personalEmail: userData?.personalEmail || "",
-          hostel: userData?.hostel || "",
-          gender: userData?.gender || "",
-          mess: userData?.mess || "",
-        });
-        setLoading(false); // Stop loading when data is fetched
+        if(error) {
+          console.error("Error fetching user details:", error);
+          window.location.href = "/login";
+          return;
+        }
+
+        const { data: userData } = await supabase.from("Users").select("*").eq("user_id", user?.id).single();
+
+        if(userData) {
+          setUserDetails(userData);
+          form.reset({
+            name: userData?.name || "",
+            rollNumber: userData?.roll_number || "",
+            personalEmail: userData?.email || "",
+            hostel: userData?.hostel || "",
+            gender: userData?.gender || "",
+            mess: userData?.mess || "",
+          });
+        }
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user details:", error);
-        setLoading(false); // Stop loading on error
+        setLoading(false);
       }
     };
 
     getData();
-  }, [form]); // Add form as a dependency to avoid re-initializing
+  }, [form]);
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/profile/update`, data, { withCredentials: true });
-      if (response.data.success) {
-        window.location.href = "/";
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if(error) {
+        console.error("Error fetching user details:", error);
+        return;
       }
+
+      const { error: upsertError } = await supabase.from("Users").update({
+        user_id: user?.id,
+        name: data.name,
+        roll_number: data.rollNumber,
+        email: data.personalEmail,
+        hostel: data.hostel,
+        mess: data.mess,
+        gender: data.gender,
+      }).eq("user_id", user?.id);
+
+      if(upsertError) {
+        console.error("Error updating user details:", upsertError);
+        return;
+      }
+
+      window.location.href = "/";
     } catch (error) {
       console.error("Error submitting the form:", error);
     }
   };
 
   if (loading) {
-    // Render loading screen
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
         <Loader2 className="w-12 h-12 animate-spin mb-4" />
@@ -146,7 +167,7 @@ const Profile = () => {
             >
               {/* First Name */}
               <FormField
-                name="firstName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>

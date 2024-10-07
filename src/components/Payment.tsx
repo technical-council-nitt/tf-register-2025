@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Loader2 } from "lucide-react";
+import { supabase } from '@/utiils/supabase';
 
 const Payment = () => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -33,9 +34,16 @@ const Payment = () => {
         },
       });
       if (response.data.success) {
+        const { error } = await supabase.from('Teams').update({ payment_status: 'Processing' }).eq('team_id', teamId);
+        if(error) {
+          console.error('Error updating team status:', error);
+          setAlertMessage('Error submitting payment. Please try again.');
+          return;
+        }
         setAlertMessage('Payment submitted successfully!');
-        // Redirect to dashboard after 3 seconds
-        window.location.href = `/team/${teamId}`;
+        setTimeout(() => {
+          window.location.href = `/team/${teamId}`;
+        }, 1000); 
       }
     } catch (error) {
       console.error('Error submitting payment:', error);
@@ -67,6 +75,9 @@ const Payment = () => {
           <div className="space-y-4">
             <img src="../src/assets/qr-code.png" alt="Payment QR Code" className="w-full rounded-lg" />
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className='text-sm'>
+                Enter Transaction ID:
+              </div>
               <Input
                 type="text"
                 placeholder="Transaction ID"
@@ -74,6 +85,9 @@ const Payment = () => {
                 onChange={(e) => setTransactionId(e.target.value)}
                 className="bg-[#2a2a2a] border border-gray-600 rounded-md p-2"
               />
+              <div className='text-sm'>
+                Upload Payment Screenshot:
+              </div>
               <Input
                 type="file"
                 accept="image/*"

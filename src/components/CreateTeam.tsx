@@ -5,40 +5,80 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { ArrowUpRight } from "lucide-react";
-import axios from 'axios';
+import { supabase } from '@/utiils/supabase';
 
 
 const CreateTeam = () => {
     const [userName, setUsername] = useState<string | undefined>(undefined);
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
+    const [userInfo, setUserInfo] = useState<any | null>(null);
 
     useEffect(() => {
-        axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })
-            .then(response => {
-                setUsername(response.data.username);
-            })
-            .catch(error => {
+        const fetchUser = async () => {
+            try {
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                if (userError) {
+                    console.error(userError);
+                    return;
+                }
+                const { data: userData, error: userDataError } = await supabase.from('Users').select('*').eq('user_id', user?.id).single();
+                if (userDataError) {
+                    console.error(userDataError);
+                    return;
+                }
+                setUsername(userData?.name);
+                setUserInfo(userData);
+            }
+            catch (error) {
                 console.error(error);
-            });
+            }
+        }
+        fetchUser();
     }, []);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const generate_team_id = async () => {
+        let teamId;
+        let isUnique = false;
+      
+        while (!isUnique) {
+          teamId = Math.floor(100000 + Math.random() * 900000).toString();
+      
+          const { data } = await supabase
+            .from('Teams')
+            .select('team_id')
+            .eq('team_id', teamId);
+      
+          if (!data || data.length === 0) {
+            isUnique = true; 
+          }
+        }
+      
+        return teamId;
+    }
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
         const data = Object.fromEntries(formData.entries());
-        axios.post(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/team/create`, data, { withCredentials: true })
-            .then(response => {
-                console.log(response.data);
-                if (response.data.success) {
-                    window.location.href = '/';
-                } else {
-                    setAlertMessage(response.data.message || "Error creating team");
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                setAlertMessage("Error creating team. Please try again.");
-            });
+        const teamId = await generate_team_id();
+
+        console.log("This is the team id: ", teamId);
+
+        const { error } = await supabase.rpc('register_team_and_user', {
+            team_name: data.name,
+            leader_email: userInfo.email,
+            contact_number: data.contactNumber,
+            user_email_param: userInfo.email,
+            new_team_id: teamId,
+        });
+
+        if(error) {
+            console.error(error);
+            setAlertMessage("Error creating team. Please try again.");
+            return;
+        }
+
+        window.location.href = "/";
     }
 
     const getFirstLetter = (name: string | undefined) => {

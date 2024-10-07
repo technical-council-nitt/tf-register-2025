@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { ArrowUpRight } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import axios from "axios";
+import { supabase } from "@/utiils/supabase";
 
 const JoinTeam = () => {
   const [teamCode, setTeamCode] = useState<string>("");
@@ -13,13 +13,25 @@ const JoinTeam = () => {
   const [userName, setUsername] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`, { withCredentials: true })
-      .then(response => {
-        setUsername(response.data.username);
-      })
-      .catch(error => {
+    const fetchUser = async () => {
+      try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) {
+          console.error(userError);
+          return;
+        }
+        const { data: userData, error: userDataError } = await supabase.from('Users').select('*').eq('user_id', user?.id).single();
+        if (userDataError) {
+          console.error(userDataError);
+          return;
+        }
+        setUsername(userData?.name);
+      }
+      catch (error) {
         console.error(error);
-      });
+      }
+    }
+    fetchUser();
   }, []);
 
   const handleInputChange = (value: string) => {
@@ -32,11 +44,32 @@ const JoinTeam = () => {
       setAlertMessage("Team code is required");
       return;
     }
-    
+
     try {
-      const response = await axios.post(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/team/join`, { uniqueId: teamCode }, { withCredentials: true });
-      setAlertMessage(response.data.message);
-      if (response.data.success) window.location.href = "/";
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) {
+        console.error(userError);
+        return;
+      }
+      const { data: userData, error: userDataError } = await supabase.from('Users').select('*').eq('user_id', user?.id).single();
+      if (userDataError) {
+        console.error(userDataError);
+        return;
+      }
+      if (userData?.team_id) {
+        setAlertMessage("You are already part of a team");
+        return;
+      }
+      const { error } = await supabase.from('Users').update({ in_team: true, team_id: teamCode }).eq('user_id', user?.id);
+      if (error) {
+        console.error("Error joining team", error);
+        setAlertMessage("Error joining team");
+        return;
+      }
+      setAlertMessage("Successfully joined team");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
     } catch (error) {
       console.error("Error joining team", error);
       setAlertMessage("Error joining team");
@@ -50,8 +83,8 @@ const JoinTeam = () => {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800">
-      <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
-      <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
+        <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+        <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
