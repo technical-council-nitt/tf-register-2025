@@ -1,3 +1,4 @@
+import Spline from '@splinetool/react-spline'
 import anime from 'animejs'
 import { useEffect } from 'react'
 
@@ -5,7 +6,11 @@ const WaterDropGrid = () => {
   return (
     <div className='relative grid h-full place-content-center bg-black px-8'>
         <DotGrid />
-        <div className="absolute inset-0 bg-gradient-to-l from-black via-transparent to-transparent pointer-events-none"></div>
+        <div className='w-40 h-16 bg-black absolute bottom-0 right-0 z-20' />
+        <div className='absolute self-center h-full w-full z-10'>
+            <Spline scene="https://prod.spline.design/LAHlqMs26UNKhB7g/scene.splinecode" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-l from-black via-black/80 to-transparent pointer-events-none"></div>
     </div>
   )
 }
@@ -62,7 +67,7 @@ const DotGrid = () => {
                 }
             }
             handleDotClick(syntheticEvent)
-        }, 5000)
+        }, 8000)
         return () => clearInterval(intervalId)
     }, [])
     
