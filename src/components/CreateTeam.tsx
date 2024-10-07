@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Alert, AlertDescription } from "./ui/alert";
 import { ArrowUpRight } from "lucide-react";
 import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
+import { toast } from "sonner";
 
 const CreateTeam = () => {
     const [userName, setUsername] = useState<string | undefined>(undefined);
-    const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState<any | null>(null);
 
     useEffect(() => {
@@ -32,7 +31,7 @@ const CreateTeam = () => {
                     return;
                 }
                 setUsername(userData?.name);
-                setUserInfo(userData);
+                setUserInfo(user);
             } catch (error) {
                 console.error(error);
             }
@@ -68,9 +67,27 @@ const CreateTeam = () => {
 
         console.log("This is the team id: ", teamId);
 
+        const { data: teamData, error: teamError } = await supabase.from("Teams").select("*").eq("name", data.name);
+
+        if (teamError) {
+            console.error(teamError);
+            toast("Whoops!", {
+                description: "Error creating team. Please try again.",
+            });
+            return;
+        }
+
+        if (teamData && teamData.length > 0) {
+            toast("Whoops!", {
+                description: "A Team already exists with that name. Please try another name.",
+            });
+            return;
+        }
+
         const { error } = await supabase.rpc("register_team_and_user", {
             team_name: data.name,
             leader_email: userInfo.email,
+            leader_user_id: userInfo.id,
             contact_number: data.contactNumber,
             user_email_param: userInfo.email,
             new_team_id: teamId,
@@ -78,7 +95,9 @@ const CreateTeam = () => {
 
         if (error) {
             console.error(error);
-            setAlertMessage("Error creating team. Please try again.");
+            toast("Whoops!", {
+                description: "Error creating team. Please try again.",
+            });
             return;
         }
 
@@ -94,11 +113,6 @@ const CreateTeam = () => {
                     <h2 className="text-3xl md:text-4xl font-bold text-center">
                         Create Team
                     </h2>
-                    {alertMessage && (
-                        <Alert className="bg-red-500 text-white p-4 rounded-lg">
-                            <AlertDescription>{alertMessage}</AlertDescription>
-                        </Alert>
-                    )}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <label

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { Alert, AlertDescription } from "./ui/alert";
 import { ArrowUpRight } from "lucide-react";
 import {
     InputOTP,
@@ -9,10 +8,10 @@ import {
 } from "@/components/ui/input-otp";
 import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
+import { toast } from "sonner";
 
 const JoinTeam = () => {
     const [teamCode, setTeamCode] = useState<string>("");
-    const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const [userName, setUsername] = useState<string | undefined>(undefined);
 
     useEffect(() => {
@@ -50,7 +49,9 @@ const JoinTeam = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!teamCode) {
-            setAlertMessage("Team code is required");
+            toast("Whoops!", {
+                description: "Team code is required.",
+            });
             return;
         }
 
@@ -73,25 +74,51 @@ const JoinTeam = () => {
                 return;
             }
             if (userData?.team_id) {
-                setAlertMessage("You are already part of a team");
+                toast("Uh oh!", {
+                    description: "You are already part of a team.",
+                });
                 return;
             }
+            
+            const { data: memberCount, error: memberCountError } = await supabase.rpc('count_team_members', { team_id_input: teamCode });
+            console.log("memberCount", memberCount);
+            if(memberCountError) {
+                console.error("Error joining team", memberCountError);
+                toast("Whoops!", {
+                    description: "Error joining team. Please try again.",
+                });
+                return;
+            }
+
+            if(memberCount && memberCount >= 5) {
+                toast("Maximum capacity reached!", {
+                    description: "Team already has maximum number of members in it.",
+                });
+                return;
+            }
+
             const { error } = await supabase
                 .from("Users")
                 .update({ team_id: teamCode })
                 .eq("user_id", user?.id);
             if (error) {
                 console.error("Error joining team", error);
-                setAlertMessage("Error joining team");
+                toast("Whoops!", {
+                    description: "Error joining team. Please try again.",
+                });
                 return;
             }
-            setAlertMessage("Successfully joined team");
+            toast("Success!", {
+                description: "You have successfully joined the team.",
+            });
             setTimeout(() => {
                 window.location.href = "/";
             }, 1000);
         } catch (error) {
             console.error("Error joining team", error);
-            setAlertMessage("Error joining team");
+            toast("Whoops!", {
+                description: "Error joining team. Please try again.",
+            });
         }
     };
 
@@ -104,11 +131,6 @@ const JoinTeam = () => {
                     <h2 className="text-3xl md:text-4xl font-bold text-center">
                         Join Team
                     </h2>
-                    {alertMessage && (
-                        <Alert className="bg-red-500 text-white p-4 rounded-lg">
-                            <AlertDescription>{alertMessage}</AlertDescription>
-                        </Alert>
-                    )}
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <label

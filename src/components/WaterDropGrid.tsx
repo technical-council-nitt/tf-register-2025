@@ -67,7 +67,7 @@ const DotGrid = () => {
                 }
             }
             handleDotClick(syntheticEvent)
-        }, 8000)
+        }, 5000)
         return () => clearInterval(intervalId)
     }, [])
     

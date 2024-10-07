@@ -3,21 +3,22 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Alert, AlertDescription } from "./ui/alert";
 import { Loader2 } from "lucide-react";
 import { supabase } from '@/utiils/supabase';
+import { toast } from 'sonner';
 
 const Payment = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const [transactionId, setTransactionId] = useState('');
   const [screenshot, setScreenshot] = useState<File | null>(null);
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!transactionId || !screenshot) {
-      setAlertMessage('Please fill in all fields');
+      toast('Whoops!', {
+        description: 'Please fill in all fields.',
+      });
       return;
     }
 
@@ -27,6 +28,24 @@ const Payment = () => {
     formData.append('screenshot', screenshot);
 
     try {
+      const { data: memberCount, error: memberCountError } = await supabase.rpc('count_team_members', { team_id_input: teamId });
+
+      if (memberCountError) {
+        console.error('Error getting team member count:', memberCountError);
+        toast('Error!', {
+          description: 'Error submitting payment. Please try again.',
+        });
+        return;
+      }
+
+      if (memberCount < 4) {
+        toast('Error!', {
+          description: 'You need to have at least 4 members in your team to submit payment.',
+        });
+        setIsLoading(false);
+        return;
+      }
+
       const response = await axios.post(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/team/${teamId}/pay`, formData, {
         withCredentials: true,
         headers: {
@@ -37,17 +56,23 @@ const Payment = () => {
         const { error } = await supabase.from('Teams').update({ payment_status: 'Processing' }).eq('team_id', teamId);
         if(error) {
           console.error('Error updating team status:', error);
-          setAlertMessage('Error submitting payment. Please try again.');
+          toast('Error!', {
+            description: 'Error submitting payment. Please try again.',
+          });
           return;
         }
-        setAlertMessage('Payment submitted successfully!');
+        toast('Success!', {
+          description: 'Payment submitted successfully!',
+        });
         setTimeout(() => {
           window.location.href = `/team/${teamId}`;
         }, 1000); 
       }
     } catch (error) {
       console.error('Error submitting payment:', error);
-      setAlertMessage('Error submitting payment. Please try again.');
+      toast('Error!', {
+        description: 'Error submitting payment. Please try again.',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -67,11 +92,6 @@ const Payment = () => {
       <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
         <div className="w-full max-w-md space-y-6 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
           <h2 className="text-3xl md:text-4xl font-bold text-center">Payment</h2>
-          {alertMessage && (
-            <Alert className="bg-blue-500 text-white p-4 rounded-lg">
-              <AlertDescription>{alertMessage}</AlertDescription>
-            </Alert>
-          )}
           <div className="space-y-4">
             <img src="../src/assets/qr-code.png" alt="Payment QR Code" className="w-full rounded-lg" />
             <form onSubmit={handleSubmit} className="space-y-4">
