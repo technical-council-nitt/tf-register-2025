@@ -5,7 +5,6 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { ArrowUpRight } from "lucide-react";
 import { Loader2 } from "lucide-react";
-import axios from "axios";
 import { supabase } from "@/utiils/supabase";
 
 const Home = () => {
@@ -17,51 +16,12 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [hasRollNumber, setHasRollNumber] = useState(false);
 
-    axios.defaults.withCredentials = true;
-
     const getFirstLetter = (name: string | undefined) => {
         return name ? name.charAt(0).toUpperCase() : "";
     };
 
     useEffect(() => {
         setLoading(true);
-        // axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/auth/is-logged-in`)
-        // .then(response => {
-        //     console.log("Logged in: ", response.data)
-        //     setLoggedIn(response.data.success);
-        //     setUsername(response.data.username);
-
-        //     if (response.data.success) {
-        //         axios.get(`http://${import.meta.env.VITE_PROD_URL_BACKEND}/profile/get-data`, { withCredentials: true })
-        //         .then(response => {
-        //             console.log(response.data);
-
-        //             const isPartofTeamValue = response.data.details.isPartofTeam === 'TRUE';
-        //             setIsPartofTeam(isPartofTeamValue);
-        //             setTeamId(response.data.details.teamId || undefined);
-                    
-        //             // Check if roll number is set
-        //             setHasRollNumber(!!response.data.details.rollNumber);
-
-        //             // Redirect to profile if roll number is not set
-        //             if (!response.data.details.rollNumber) {
-        //                 window.location.href = "/profile";
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         })
-        //         .finally(() => {
-        //             setLoading(false);
-        //         });
-        //     } else {
-        //         setLoading(false);
-        //     }
-        // })
-        // .catch(error => {
-        //     console.error(error);
-        //     setLoading(false);
-        // });
         const fetchUser = async () => {
             const { data: { user }, error: userError } = await supabase.auth.getUser();
             if (userError) {
@@ -77,7 +37,7 @@ const Home = () => {
             }
             setLoggedIn(true);
             setUsername(userData?.name);
-            setIsPartofTeam(userData?.in_team);
+            setIsPartofTeam(userData?.team_id ? true : false);
             setTeamId(userData?.team_id);
             setHasRollNumber(!!userData?.roll_number);
             if (!userData?.roll_number) {

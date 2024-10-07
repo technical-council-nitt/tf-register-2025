@@ -60,7 +60,7 @@ const JoinTeam = () => {
         setAlertMessage("You are already part of a team");
         return;
       }
-      const { error } = await supabase.from('Users').update({ in_team: true, team_id: teamCode }).eq('user_id', user?.id);
+      const { error } = await supabase.from('Users').update({ team_id: teamCode }).eq('user_id', user?.id);
       if (error) {
         console.error("Error joining team", error);
         setAlertMessage("Error joining team");
