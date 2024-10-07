@@ -47,4 +47,11 @@ export default tseslint.config({
     ...react.configs['jsx-runtime'].rules,
   },
 })
+
+```
+
+- Copy ENV
+
+```
+cp .env.example .env
 ```
