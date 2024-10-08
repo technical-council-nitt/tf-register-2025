@@ -280,7 +280,7 @@ const Dashboard = () => {
                                   </AvatarFallback>
                                 </Avatar>
                                 <div className="flex flex-col">
-                                  <span className="text-white text-[16px]">{member.name}</span>
+                                  <span className="text-white text-[16px]">{member.name} {index === 0 && "(Lead)"}</span>
                                   <span className="text-white text-[12px] opacity-60">
                                     {member.roll_number}
                                   </span>
@@ -341,12 +341,12 @@ const Dashboard = () => {
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
-                <Button
+                {isLead && <Button
                   onClick={handleGenerateNewTeamId}
                   className="ml-2 p-1 bg-transparent hover:bg-gray-700 rounded-full"
                 >
                   <VscDebugRestart className="h-4 w-4" />
-                </Button>
+                </Button>}
               </div>
             </div>
           </div>

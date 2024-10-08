@@ -93,7 +93,7 @@ const Payment = () => {
         <div className="w-full max-w-md space-y-6 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
           <h2 className="text-3xl md:text-4xl font-bold text-center">Payment</h2>
           <div className="space-y-4">
-            <img src="../src/assets/qr-code.png" alt="Payment QR Code" className="w-full rounded-lg" />
+            <img src="https://i.imgur.com/ZvnhntA.png" alt="Payment QR Code" className="w-full rounded-lg" />
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className='text-sm'>
                 Enter Transaction ID:
