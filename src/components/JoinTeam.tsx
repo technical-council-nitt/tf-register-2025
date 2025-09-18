@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/input-otp";
 import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const JoinTeam = () => {
     const [teamCode, setTeamCode] = useState<string>("");
