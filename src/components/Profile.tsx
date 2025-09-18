@@ -278,7 +278,7 @@ const Profile = () => {
             </form>
           </Form>
            <div className="w-full flex md:flex-row-reverse border-t-[1px] border-[#E2E8F066] my-1 items-center justify-center px-4 pb-2">
-                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300">
+                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300" onClick={() => window.location.href = '/createorjoin'}>
                   PROCEED
                 </Button>
               </div>

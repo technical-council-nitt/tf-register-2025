@@ -66,9 +66,9 @@ const Home = () => {
             <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
                 <div className="w-full max-w-md space-y-6 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold">
-                        Welcome to TransfiNITTe
+                        Welcome to TransfiNITTe 
                     </h2>
-                    <p className="text-sm md:text-base">
+                    <p className="text-sm md:text-base gradient-text ">
                         Get ready for TransfiNITTe 2024 Hackathon. Join a team
                         or create your own to participate!
                     </p>

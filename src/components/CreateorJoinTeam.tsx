@@ -129,11 +129,11 @@ const Create_JoinTeam = () => {
             <div className="min-h-[30vh] flex flex-col justify-center items-center  pt-40  ">
 
              <div className="flex flex-col my-50  ">
-                    <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 ">
+                    <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 " onClick={() => window.location.href = '/create-team'}>
                     Create Team
                 </Button>
                 <GradientLine />
-                 <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 ">
+                 <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 " onClick={() => window.location.href = '/join-team'}>
                     Join a Team
                 </Button>
             </div>

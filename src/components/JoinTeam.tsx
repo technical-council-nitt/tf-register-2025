@@ -182,7 +182,7 @@ const JoinTeam = () => {
             </main>
             <div className="text-[#61FF61] font-thin text-center py-6 text-sm md:text-lg md:text-md">Joining Shubham's Team</div>
             <div className="p-4 pt-1 border-t border-neutral-800 flex md:justify-end">
-                <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 ">
+                <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 " onClick={() => window.location.href = '/team/45'}>
                     PROCEED
                 </Button>
             </div>

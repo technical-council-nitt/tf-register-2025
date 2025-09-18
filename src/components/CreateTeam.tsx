@@ -193,7 +193,8 @@ const CreateTeam = () => {
               <Button
                         type="submit"
                         className="w-full md:w-1/4 font-thin bg-white hover:bg-gray-200 text-black  py-3 rounded-lg flex items-center justify-center gap-2"
-                        >
+                        onClick={() => window.location.href = '/team/45'}
+                    >
                         <span>PROCEED</span>
                         
                     </Button>
