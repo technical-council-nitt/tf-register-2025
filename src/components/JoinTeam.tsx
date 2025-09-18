@@ -129,8 +129,8 @@ const JoinTeam = () => {
                 <img src="/Vector-2.png" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
                 <a href="/" className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s] ">GO BACK</a>
             </div>
-            <h1 className="md:text-5xl text-3xl ml-8 mb-4 md:mb-16 md:ml-0 gradient-text  w-full text-left font-thin md:text-center">Complete your Application</h1>
-            <p className="  ml-8 mb-16 md:mb-32  md:ml-0   w-full text-left md:text-center font-thin md:text-2xl">Join Existing Team</p>
+            <h1 className="md:text-5xl text-3xl ml-4 mb-4 md:mb-16 md:ml-0 gradient-text  w-full text-left font-thin md:text-center">Complete your Application</h1>
+            <p className="  ml-4 mb-16 md:mb-32  md:ml-0   w-full text-left md:text-center font-thin md:text-2xl">Join Existing Team</p>
 
 
             <main className="flex-grow flex flex-col  items-center px-4 md:px-6">
