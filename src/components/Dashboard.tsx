@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+// import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar,  AvatarImage } from "./ui/avatar";
 // import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -253,6 +253,8 @@ const Dashboard = () => {
   // }
 
   console.log("Team: ", team);
+  console.log("Is Lead: ", isLead);
+  console.log("User Info: ", userInfo);
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white font-nhg">

@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 // import { ArrowUpRight } from "lucide-react";
 import GradientLine from "./ui/gradientline";
 
 import NavBar from "./Navbar";
+// import { set } from "animejs";
 // import { toast } from "sonner";
 
 const Create_JoinTeam = () => {
-    const [teamCode, setTeamCode] = useState<string>("");
+    // const [teamCode, setTeamCode] = useState<string>("");
     const [userName, setUsername] = useState<string | undefined>(undefined);
 
     useEffect(() => {
+        setUsername("User");
         // const fetchUser = async () => {
         //     try {
         //         const {

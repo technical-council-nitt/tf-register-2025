@@ -46,81 +46,81 @@ const JoinTeam = () => {
         setTeamCode(value);
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!teamCode) {
-            toast("Whoops!", {
-                description: "Team code is required.",
-            });
-            return;
-        }
+    // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     if (!teamCode) {
+    //         toast("Whoops!", {
+    //             description: "Team code is required.",
+    //         });
+    //         return;
+    //     }
 
-        try {
-            const {
-                data: { user },
-                error: userError,
-            } = await supabase.auth.getUser();
-            if (userError) {
-                console.error(userError);
-                return;
-            }
-            const { data: userData, error: userDataError } = await supabase
-                .from("Users")
-                .select("*")
-                .eq("user_id", user?.id)
-                .single();
-            if (userDataError) {
-                console.error(userDataError);
-                return;
-            }
-            if (userData?.team_id) {
-                toast("Uh oh!", {
-                    description: "You are already part of a team.",
-                });
-                return;
-            }
+    //     try {
+    //         const {
+    //             data: { user },
+    //             error: userError,
+    //         } = await supabase.auth.getUser();
+    //         if (userError) {
+    //             console.error(userError);
+    //             return;
+    //         }
+    //         const { data: userData, error: userDataError } = await supabase
+    //             .from("Users")
+    //             .select("*")
+    //             .eq("user_id", user?.id)
+    //             .single();
+    //         if (userDataError) {
+    //             console.error(userDataError);
+    //             return;
+    //         }
+    //         if (userData?.team_id) {
+    //             toast("Uh oh!", {
+    //                 description: "You are already part of a team.",
+    //             });
+    //             return;
+    //         }
 
-            const { data: memberCount, error: memberCountError } = await supabase.rpc('count_team_members', { team_id_input: teamCode });
-            console.log("memberCount", memberCount);
-            if (memberCountError) {
-                console.error("Error joining team", memberCountError);
-                toast("Whoops!", {
-                    description: "Error joining team. Please try again.",
-                });
-                return;
-            }
+    //         const { data: memberCount, error: memberCountError } = await supabase.rpc('count_team_members', { team_id_input: teamCode });
+    //         console.log("memberCount", memberCount);
+    //         if (memberCountError) {
+    //             console.error("Error joining team", memberCountError);
+    //             toast("Whoops!", {
+    //                 description: "Error joining team. Please try again.",
+    //             });
+    //             return;
+    //         }
 
-            if (memberCount && memberCount >= 5) {
-                toast("Maximum capacity reached!", {
-                    description: "Team already has maximum number of members in it.",
-                });
-                return;
-            }
+    //         if (memberCount && memberCount >= 5) {
+    //             toast("Maximum capacity reached!", {
+    //                 description: "Team already has maximum number of members in it.",
+    //             });
+    //             return;
+    //         }
 
-            const { error } = await supabase
-                .from("Users")
-                .update({ team_id: teamCode })
-                .eq("user_id", user?.id);
-            if (error) {
-                console.error("Error joining team", error);
-                toast("Whoops!", {
-                    description: "Error joining team. Please try again.",
-                });
-                return;
-            }
-            toast("Success!", {
-                description: "You have successfully joined the team.",
-            });
-            setTimeout(() => {
-                window.location.href = "/";
-            }, 1000);
-        } catch (error) {
-            console.error("Error joining team", error);
-            toast("Whoops!", {
-                description: "Error joining team. Please try again.",
-            });
-        }
-    };
+    //         const { error } = await supabase
+    //             .from("Users")
+    //             .update({ team_id: teamCode })
+    //             .eq("user_id", user?.id);
+    //         if (error) {
+    //             console.error("Error joining team", error);
+    //             toast("Whoops!", {
+    //                 description: "Error joining team. Please try again.",
+    //             });
+    //             return;
+    //         }
+    //         toast("Success!", {
+    //             description: "You have successfully joined the team.",
+    //         });
+    //         setTimeout(() => {
+    //             window.location.href = "/";
+    //         }, 1000);
+    //     } catch (error) {
+    //         console.error("Error joining team", error);
+    //         toast("Whoops!", {
+    //             description: "Error joining team. Please try again.",
+    //         });
+    //     }
+    // };
 
     return (
         <div className="flex flex-col min-h-screen bg-black text-white font-nhg md:justify-center">

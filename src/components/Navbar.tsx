@@ -1,4 +1,4 @@
-import { supabase } from "@/utiils/supabase";
+// import { supabase } from "@/utiils/supabase";
 // import { Avatar, AvatarFallback } from "./ui/avatar";
 // import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "./ui/dropdown-menu";
 // import {
@@ -12,7 +12,8 @@ type NavBarProps = {
     userName?: string;
 };
 
-const NavBar: React.FC<NavBarProps> = ({ userName }) => {
+// const NavBar: React.FC<NavBarProps> = ({ userName }) => {
+const NavBar: React.FC<NavBarProps> = ({  }) => {
 
     // const handleOptionClick = async (option: string) => {
     //     if (option === "Profile") {

@@ -1,6 +1,6 @@
 import { Button } from "./ui/button";
 import { ArrowUpRight } from "lucide-react";
-import { supabase } from "@/utiils/supabase";
+// import { supabase } from "@/utiils/supabase";
 
 const Login = () => {
     // const handleLogin = async () => {
