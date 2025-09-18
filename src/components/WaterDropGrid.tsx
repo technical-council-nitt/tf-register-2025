@@ -44,12 +44,12 @@ const DotGrid = () => {
             dots.push(
                 <div   
                     onClick={handleDotClick}
-                    className='group cursor-crosshair rounded-full p-2 transition-colors hover:bg-slate-600'
+                    className='group cursor-crosshair rounded-full p-2 transition-colors hover:bg-pink-600'
                     date-index={index} 
                     key={`${x}-${y}`}
                 >
                     <div 
-                        className='dot-point w-2 h-2 rounded-full bg-gradient-to-b from-slate-700 to-slate-400 opacity-50 group-hover:from-indigo-600 group-hover:to-white'
+                        className='dot-point w-2 h-2 rounded-full bg-gradient-to-b from-pink-700 to-slate-400 opacity-50 group-hover:from-indigo-600 group-hover:to-white'
                         date-index={index}
                     />
                 </div>

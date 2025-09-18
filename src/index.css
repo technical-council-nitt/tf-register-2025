@@ -3,8 +3,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root{
+  --TF25-gradient: conic-gradient(from 18deg at -19.44% 33.7%, #FF315E 22.01960563659668deg, #E861FF 89.17945325374603deg, #4771FF 153.33579540252686deg, #FFF 175.4735255241394deg);
+ 
+}
 @layer base {
   :root {
+    --TF25-gradient: conic-gradient(from 18deg at -19.44% 33.7%, #FF315E 22.01960563659668deg, #E861FF 89.17945325374603deg, #4771FF 153.33579540252686deg, #FFF 175.4735255241394deg);
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -83,7 +88,7 @@
 }
 
 body {
-  font-family: 'Geist', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 /* Dotted background pattern */
@@ -115,4 +120,37 @@ body {
 * {
   scrollbar-width: thin; /* Width of the scrollbar */
   scrollbar-color: #ffffff #1a1a1a; /* Thumb color and track color */
+}
+
+.tf-text {
+  background: conic-gradient(from 18deg at -19.44% 33.7%, #FF315E 22.01960563659668deg, #E861FF 89.17945325374603deg, #4771FF 153.33579540252686deg, #FFF 175.4735255241394deg);
+  background-clip: text;
+  -webkit-background-clip: text; /* for Safari/Chrome */
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* fallback */
+}
+.gradient-text {
+  /* 1. Define the gradient background */
+  background: linear-gradient(to right, #ff31ad, #a259ff);
+
+  /* 2. Clip the background to the text */
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* 3. Make the text color transparent to show the gradient */
+  -webkit-text-fill-color: transparent;
+}
+.gradient-border {
+  border: 2px solid;
+  border-radius: 1px;
+  border-image: linear-gradient(to right, #ff31ad, #a259ff) 1;
+  
+  overflow: hidden; /* ensures the gradient respects the rounded corners */
+}
+@font-face {
+  font-family: 'Neue Haas Grotesk Display Pro';
+  src: url('/NeueHaasDisplayBlack.ttf') format('ttf');
+  font-weight: 400; /* or 500, 700 depending on the file */
+  font-style: normal;
+  font-display: swap;
 }

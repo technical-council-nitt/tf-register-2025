@@ -28,20 +28,20 @@ const NavBar: React.FC<NavBarProps> = ({ userName }) => {
     };
 
     return (
-        <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800 max-h-[64px]">
+        <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800 max-h-[64px] font-nhg ">
             <img
-                src="/motif.svg"
+                src="/tf badge.svg"
                 alt="Logo"
                 style={{ width: "40px", aspectRatio: "63 / 29" }}
                 className="md:hidden block"
             />
             <img
-                src="/motif-desk.svg"
+                src="/tf badge.svg"
                 alt="Logo"
                 style={{ width: "120px", aspectRatio: "155 / 20" }}
                 className="md:block hidden"
             />
-            <TooltipProvider>
+            {/* <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <DropdownMenu>
@@ -68,7 +68,12 @@ const NavBar: React.FC<NavBarProps> = ({ userName }) => {
                         </DropdownMenu>
                     </TooltipTrigger>
                 </Tooltip>
-            </TooltipProvider>
+            </TooltipProvider> */}
+        <div className="relative rounded-[4px] p-[1px] bg-gradient-to-r from-[#ff31ad] to-[#a259ff] ">
+  <div className="bg-black rounded-[4px] w-full h-full px-2 text-[10px]  md:text-[15px]">
+    Registration
+  </div>
+</div>
         </nav>
     );
 };

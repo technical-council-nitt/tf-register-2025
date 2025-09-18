@@ -57,7 +57,8 @@ export default {
   		fontFamily: {
 			poppins: ['Poppins', 'sans-serif'],
 			geist: ['Geist', 'sans-serif'],
-			spacegrotesk: ["Space Grotesk", 'sans-serif']
+			spacegrotesk: ["Space Grotesk", 'sans-serif'],
+			'nhg': ['"Neue Haas Grotesk Display Pro"', 'sans-serif'],
 		}
   	}
   },

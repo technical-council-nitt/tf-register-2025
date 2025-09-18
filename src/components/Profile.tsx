@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import NavBar from "./Navbar";
 import {
   Form,
   FormItem,
@@ -74,9 +75,9 @@ const Profile = () => {
         } = await supabase.auth.getUser();
 
         if(error) {
-          console.error("Error fetching user details:", error);
-          window.location.href = "/login";
-          return;
+          // console.error("Error fetching user details:", error);
+          // window.location.href = "/login";
+          // return;
         }
 
         const { data: userData } = await supabase.from("Users").select("*").eq("user_id", user?.id).single();
@@ -142,37 +143,48 @@ const Profile = () => {
 
   return (
     <>
-      <nav className="flex justify-between bg-black items-center p-[15px] md:p-4 border-b-[1px] border-neutral-800">
-        <img src="/motif.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
-        <img src="/motif-desk.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
-        <img src="/register.svg" alt="Logo" style={{ width: '110px', aspectRatio: '96 / 20' }} />
-      </nav>
+     <div className="flex flex-col min-h-screen bg-black text-white font-nhg ">
+      <NavBar  />
       <div className="flex">
+        
         <div className="bg-white w-full md:block hidden overflow-hidden">
           <WaterDropGrid />
         </div>
-        <div className="flex flex-col w-full justify-center items-center min-h-screen bg-black p-4">
-          <div className="flex self-start ml-4 mb-2 cursor-pointer">
-            <img src="/left-arrow.svg" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
-            <a href="/" className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s]">GO BACK</a>
+        <div className="flex flex-col w-full justify-center items-center min-h-screen bg-black p-1">
+          <div className="flex self-start ml-4 my-2 cursor-pointer">
+            <img src="/Vector-2.png" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
+            <a href="/" className="text-gray-300 text-sm self-center pl-2  transition-[1s] font-extralight">GO BACK</a>
           </div>
-          <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">Complete your Application</h1>
-          <p className="md:text-xs mb-4 ml-4 text-left md:text-sm text-white">
-            Please enter your details to attend TransfiNITTe 2024 Hackathon. By entering your information, you acknowledge you have read our Rulebook.
+          <h1 className="md:text-2xl text-3xl ml-8 mb-4 gradient-text md:text-left w-full text-left">Complete your Application</h1>
+          <p className="md:text-xs mb-4 ml-4 text-left text-white font-extralight tracking-wide ">
+            Please enter your details to attend TransfiNITTe 2024 Hackathon. By entering your information, you acknowledge you have read our <a href="/rulebook" className="underline underline-offset-4 decoration-1 decoration-slate-300">Rulebook</a>.
           </p>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="text-white p-6 rounded-lg shadow-md w-full space-y-2"
+              className="text-white p-2 rounded-lg shadow-md w-full space-y-2"
             >
               {/* First Name */}
               <FormField
-                name="name"
+                name="firstname"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel className="font-thin">First Name</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Full Name" {...field} className="bg-[#1a1a1a] border border-gray-600 mt-0 rounded-md p-2" />
+                      <Input type="text" placeholder="First Name" {...field} className="bg-[#1a1a1a] border-[0.5px] border-[#E2E8F033] mt-0 rounded-md p-2" />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+               {/* Last Name */}
+              <FormField
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-thin">Last Name</FormLabel>
+                    <FormControl>
+                      <Input type="text" placeholder="Last Name" {...field} className="bg-[#1a1a1a] border-[0.5px] border-[#E2E8F033] mt-0 rounded-md p-2" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -184,9 +196,9 @@ const Profile = () => {
                 name="rollNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Roll Number</FormLabel>
+                    <FormLabel className="font-thin">Roll Number</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter Roll Number" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                      <Input type="text" placeholder="Enter Roll Number" {...field} className="bg-[#1a1a1a] border-[0.5px] border-[#E2E8F033] mt-0  rounded-md p-2" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -198,9 +210,9 @@ const Profile = () => {
                 name="personalEmail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Personal Email</FormLabel>
+                    <FormLabel className="font-thin">Personal Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" disabled />
+                      <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border-[0.5px] border-[#E2E8F033]  rounded-md p-2" disabled />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -212,9 +224,9 @@ const Profile = () => {
                 name="hostel"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hostel</FormLabel>
+                    <FormLabel className="font-thin">Hostel</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter your hostel name" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" />
+                      <Input type="text" placeholder="Enter your hostel name" {...field} className="bg-[#1a1a1a] mt-0 border-[0.5px] border-[#E2E8F033] rounded-md p-2" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -226,9 +238,9 @@ const Profile = () => {
                 name="mess"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mess</FormLabel>
+                    <FormLabel className="font-thin">Mess</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter your Mess name" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                      <Input type="text" placeholder="Enter your Mess name" {...field} className="bg-[#1a1a1a] border-[0.5px] border-[#E2E8F033] mt-0 rounded-md p-2" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -240,13 +252,13 @@ const Profile = () => {
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel className="font-thin">Gender</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-                        <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                        <SelectTrigger className="bg-[#1a1a1a] border-[0.5px] border-[#E2E8F033] rounded-md">
                           <SelectValue placeholder="Select Gender" />
                         </SelectTrigger>
                         <SelectContent>
@@ -262,14 +274,16 @@ const Profile = () => {
                   </FormItem>
                 )}
               />
-              <div className="w-full flex md:flex-row-reverse">
-                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
-                  Proceed
-                </Button>
-              </div>
+             
             </form>
           </Form>
+           <div className="w-full flex md:flex-row-reverse border-t-[1px] border-[#E2E8F066] my-1 items-center justify-center px-4 pb-2">
+                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300">
+                  PROCEED
+                </Button>
+              </div>
         </div>
+      </div>
       </div>
     </>
   );

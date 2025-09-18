@@ -6,6 +6,8 @@ import Profile from "./components/Profile";
 import Dashboard from "./components/Dashboard";
 import JoinTeam from "./components/JoinTeam";
 import Payment from "./components/Payment";
+import Create_JoinTeam from "./components/CreateorJoinTeam";
+
 
 export default function App() {
     return (
@@ -17,6 +19,8 @@ export default function App() {
                     <Route path="/join-team" element={<JoinTeam />}></Route>
                     <Route path="/login" element={<Login />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
+                    <Route path="/createorjoin" element={<Create_JoinTeam />}></Route>
+                    
                     <Route path="/team/:teamId" element={<Dashboard />}></Route>
                     <Route path="/:teamId/pay" element={<Payment />} />
                 </Routes>
