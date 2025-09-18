@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Copy, Loader2 } from "lucide-react";
+import { Avatar,  AvatarImage } from "./ui/avatar";
+// import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+
+// import { Copy, Loader2 } from "lucide-react";
 
 // import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
-import { IoExitOutline } from "react-icons/io5";
-import { FaRegTrashAlt } from "react-icons/fa";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { VscDebugRestart } from "react-icons/vsc";
+// import { IoExitOutline } from "react-icons/io5";
+// import { FaRegTrashAlt } from "react-icons/fa";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog";
+// import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
 const color=["#FF4C4C", // red
   "#7CFF4C", // green
@@ -43,13 +45,13 @@ type Team = {
 };
 
 const Dashboard = () => {
-  const { teamId } = useParams<{ teamId: string }>();
+  // const { teamId } = useParams<{ teamId: string }>();
   const [team, setTeam] = useState<Team | null>(null);
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userName, setUsername] = useState<string | undefined>(undefined);
   const [isLead, setIsLead] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -140,7 +142,7 @@ const Dashboard = () => {
     }
   }
 
-  const generate_team_id = async () => {
+  // const generate_team_id = async () => {
     // let teamId;
     // let isUnique = false;
 
@@ -158,9 +160,9 @@ const Dashboard = () => {
     // }
 
     // return teamId;
-  };
+  // };
 
-  const handleGenerateNewTeamId = async () => {
+  // const handleGenerateNewTeamId = async () => {
     // const newTeamId = await generate_team_id();
 
     // if (team && isLead) {
@@ -179,10 +181,10 @@ const Dashboard = () => {
     //   }, 1000);
     //   window.location.href = `/team/${newTeamId}`;
     // }
-  }
+  // }
 
 
-  const handleLeaveTeam = async () => {
+  // const handleLeaveTeam = async () => {
     // if (team) {
     //   const { error } = await supabase
     //     .from("Users")
@@ -196,9 +198,9 @@ const Dashboard = () => {
 
     //   navigate("/");
     // }
-  }
+  // }
 
-  const handleDiscardTeam = async () => {
+  // const handleDiscardTeam = async () => {
     // if (!isLead) {
     //   return;
     // }
@@ -215,23 +217,23 @@ const Dashboard = () => {
 
     //   navigate("/");
     // }
-  }
+  // }
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(
-      () => {
-        toast("Copied!", {
-          description: "Team ID copied to clipboard.",
-        });
-      },
-      (err) => {
-        console.error("Could not copy text: ", err);
-        toast("Whoops!", {
-          description: "Could not copy team ID to clipboard.",
-        });
-      }
-    );
-  };
+  // const copyToClipboard = (text: string) => {
+  //   navigator.clipboard.writeText(text).then(
+  //     () => {
+  //       toast("Copied!", {
+  //         description: "Team ID copied to clipboard.",
+  //       });
+  //     },
+  //     (err) => {
+  //       console.error("Could not copy text: ", err);
+  //       toast("Whoops!", {
+  //         description: "Could not copy team ID to clipboard.",
+  //       });
+  //     }
+  //   );
+  // };
 
   // // if (isLoading) {
   //   return (

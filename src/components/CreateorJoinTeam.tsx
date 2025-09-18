@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { ArrowUpRight } from "lucide-react";
+// import { ArrowUpRight } from "lucide-react";
 import GradientLine from "./ui/gradientline";
 
 import NavBar from "./Navbar";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 const Create_JoinTeam = () => {
     const [teamCode, setTeamCode] = useState<string>("");

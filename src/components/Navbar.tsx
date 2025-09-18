@@ -1,11 +1,11 @@
 import { supabase } from "@/utiils/supabase";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "./ui/dropdown-menu";
-import {
-    Tooltip,
-    TooltipProvider,
-    TooltipTrigger,
-} from "./ui/tooltip";
+// import { Avatar, AvatarFallback } from "./ui/avatar";
+// import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "./ui/dropdown-menu";
+// import {
+//     Tooltip,
+//     TooltipProvider,
+//     TooltipTrigger,
+// } from "./ui/tooltip";
 import React from "react";
 
 type NavBarProps = {
@@ -14,18 +14,18 @@ type NavBarProps = {
 
 const NavBar: React.FC<NavBarProps> = ({ userName }) => {
 
-    const handleOptionClick = async (option: string) => {
-        if (option === "Profile") {
-            window.location.href = "/profile";
-        } else if (option === "Logout") {
-            await supabase.auth.signOut();
-            window.location.href = "/login";
-        }
-    };
+    // const handleOptionClick = async (option: string) => {
+    //     if (option === "Profile") {
+    //         window.location.href = "/profile";
+    //     } else if (option === "Logout") {
+    //         await supabase.auth.signOut();
+    //         window.location.href = "/login";
+    //     }
+    // };
 
-    const getFirstLetter = (name: string | undefined) => {
-        return name ? name.charAt(0).toUpperCase() : "";
-    };
+    // const getFirstLetter = (name: string | undefined) => {
+    //     return name ? name.charAt(0).toUpperCase() : "";
+    // };
 
     return (
         <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800 max-h-[64px] font-nhg ">

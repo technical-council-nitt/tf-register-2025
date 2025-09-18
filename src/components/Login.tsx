@@ -3,15 +3,15 @@ import { ArrowUpRight } from "lucide-react";
 import { supabase } from "@/utiils/supabase";
 
 const Login = () => {
-    const handleLogin = async () => {
-        try {
-            supabase.auth.signInWithOAuth({
-                provider: 'google',
-            })
-        } catch (error) {
-            console.error('Error getting OAuth URL:', error);
-        }
-    }
+    // const handleLogin = async () => {
+    //     try {
+    //         supabase.auth.signInWithOAuth({
+    //             provider: 'google',
+    //         })
+    //     } catch (error) {
+    //         console.error('Error getting OAuth URL:', error);
+    //     }
+    // }
 
     return (
         <div className="flex flex-col min-h-screen bg-black text-white">
