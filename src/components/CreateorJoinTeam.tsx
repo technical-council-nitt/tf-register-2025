@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
+// import  { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { ArrowUpRight } from "lucide-react";
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { supabase } from "@/utiils/supabase";
+import GradientLine from "./ui/gradientline";
+
 import NavBar from "./Navbar";
+import { set } from "animejs";
 import { toast } from "sonner";
 
-const JoinTeam = () => {
+const Create_JoinTeam = () => {
     const [teamCode, setTeamCode] = useState<string>("");
     const [userName, setUsername] = useState<string | undefined>(undefined);
 
     useEffect(() => {
+        setUsername("User");
         const fetchUser = async () => {
             try {
                 const {
@@ -79,10 +79,10 @@ const JoinTeam = () => {
                 });
                 return;
             }
-            
+
             const { data: memberCount, error: memberCountError } = await supabase.rpc('count_team_members', { team_id_input: teamCode });
             console.log("memberCount", memberCount);
-            if(memberCountError) {
+            if (memberCountError) {
                 console.error("Error joining team", memberCountError);
                 toast("Whoops!", {
                     description: "Error joining team. Please try again.",
@@ -90,7 +90,7 @@ const JoinTeam = () => {
                 return;
             }
 
-            if(memberCount && memberCount >= 5) {
+            if (memberCount && memberCount >= 5) {
                 toast("Maximum capacity reached!", {
                     description: "Team already has maximum number of members in it.",
                 });
@@ -120,59 +120,33 @@ const JoinTeam = () => {
                 description: "Error joining team. Please try again.",
             });
         }
-    };
+   
 
     return (
-        <div className="flex flex-col min-h-screen bg-black text-white">
+        <div className="flex flex-col min-h-screen bg-black text-white font-nhg  p-2 ">
             <NavBar userName={userName} />
+            <div className="flex self-start ml-4  cursor-pointer my-4 justify-center items-center">
+                <img src="/Vector-2.png" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
+                <a href="/" className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s] ">GO BACK</a>
+            </div>
+            <h1 className="md:text-5xl text-3xl  mb-4 md:mb-0 md:ml-0 gradient-text  w-full text-left font-thin md:text-center">Complete your Application</h1>
+            <div className="min-h-[30vh] flex flex-col justify-center items-center  pt-40  ">
 
-            <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
-                <div className="w-full max-w-md space-y-6 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
-                    <h2 className="text-3xl md:text-4xl font-bold text-center">
-                        Join Team
-                    </h2>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <label
-                                htmlFor="teamCode"
-                                className="block text-sm font-medium text-gray-400"
-                            >
-                                Enter Team Code{" "}
-                                <span className="text-red-500">*</span>
-                            </label>
-                            <div className="flex justify-center">
-                                <InputOTP
-                                    value={teamCode}
-                                    onChange={handleInputChange}
-                                    maxLength={6}
-                                >
-                                    <InputOTPGroup className="flex space-x-2 justify-center">
-                                        {Array.from(
-                                            { length: 6 },
-                                            (_, index) => (
-                                                <InputOTPSlot
-                                                    key={index}
-                                                    index={index}
-                                                    className="bg-[#2a2a2a] border border-gray-600 text-white w-12 h-12 text-center rounded-lg text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                />
-                                            )
-                                        )}
-                                    </InputOTPGroup>
-                                </InputOTP>
-                            </div>
-                        </div>
-                        <Button
-                            type="submit"
-                            className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2"
-                        >
-                            <span>Join Team</span>
-                            <ArrowUpRight className="h-5 w-5" />
-                        </Button>
-                    </form>
+             <div className="flex flex-col my-50  ">
+                    <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 " onClick={() => window.location.href = '/create-team'}>
+                    Create Team
+                </Button>
+                <GradientLine />
+                 <Button className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg  hover:bg-gray-300 transition duration-300 " onClick={() => window.location.href = '/join-team'}>
+                    Join a Team
+                </Button>
+            </div>
+
                 </div>
-            </main>
-        </div>
+ 
+           
+           </div>
     );
 };
 
-export default JoinTeam;
+export default Create_JoinTeam;

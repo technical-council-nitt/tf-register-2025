@@ -22,7 +22,7 @@ const CreateTeam = () => {
                     return;
                 }
                 const { data: userData, error: userDataError } = await supabase
-                    .from("Users")
+                    .from("users")
                     .select("*")
                     .eq("user_id", user?.id)
                     .single();
@@ -47,7 +47,7 @@ const CreateTeam = () => {
             teamId = Math.floor(100000 + Math.random() * 900000).toString();
 
             const { data } = await supabase
-                .from("Teams")
+                .from("teams")
                 .select("team_id")
                 .eq("team_id", teamId);
 
@@ -67,7 +67,7 @@ const CreateTeam = () => {
 
         console.log("This is the team id: ", teamId);
 
-        const { data: teamData, error: teamError } = await supabase.from("Teams").select("*").eq("name", data.name);
+        const { data: teamData, error: teamError } = await supabase.from("teams").select("*").eq("name", data.name);
 
         if (teamError) {
             console.error(teamError);

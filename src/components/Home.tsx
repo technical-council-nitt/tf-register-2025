@@ -28,7 +28,7 @@ const Home = () => {
                 return;
             }
             const { data: userData, error: userDataError } = await supabase
-                .from("Users")
+                .from("users")
                 .select("*")
                 .eq("user_id", user?.id)
                 .single();

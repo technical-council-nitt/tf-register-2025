@@ -60,7 +60,7 @@ const Dashboard = () => {
           return;
         }
         const { data: userData, error: userDataError } = await supabase
-          .from("Users")
+          .from("users")
           .select("*")
           .eq("user_id", user?.id)
           .single();
@@ -73,11 +73,11 @@ const Dashboard = () => {
         setUserInfo(user);
         setUsername(userData?.name);
         const { data: team, error: e } = await supabase
-          .from("Teams")
+          .from("teams")
           .select(
             `
           *,
-          members: Users(*)
+          members: users(*)
         `
           )
           .eq("team_id", teamId)
@@ -116,7 +116,7 @@ const Dashboard = () => {
       teamId = Math.floor(100000 + Math.random() * 900000).toString();
 
       const { data } = await supabase
-        .from("Teams")
+        .from("teams")
         .select("team_id")
         .eq("team_id", teamId);
 
@@ -133,7 +133,7 @@ const Dashboard = () => {
 
     if (team && isLead) {
       const { error } = await supabase
-        .from("Teams")
+        .from("teams")
         .update({ team_id: newTeamId })
         .eq("team_id", team.team_id);
 
@@ -153,7 +153,7 @@ const Dashboard = () => {
     const handleLeaveTeam = async () => {
       if (team) {
         const { error } = await supabase
-          .from("Users")
+          .from("users")
           .update({ team_id: null })
           .eq("user_id", userInfo.id);
 
@@ -172,7 +172,7 @@ const Dashboard = () => {
       }
       if (team) {
         const { error } = await supabase
-          .from("Teams")
+          .from("teams")
           .delete()
           .eq("team_id", team.team_id);
 

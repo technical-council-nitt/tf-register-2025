@@ -79,7 +79,7 @@ const Profile = () => {
           return;
         }
 
-        const { data: userData } = await supabase.from("Users").select("*").eq("user_id", user?.id).single();
+        const { data: userData } = await supabase.from("users").select("*").eq("user_id", user?.id).single();
 
         if(userData) {
           setUserDetails(userData);
@@ -110,7 +110,7 @@ const Profile = () => {
         return;
       }
 
-      const { error: upsertError } = await supabase.from("Users").update({
+      const { error: upsertError } = await supabase.from("users").update({
         user_id: user?.id,
         name: data.name,
         roll_number: data.rollNumber,
