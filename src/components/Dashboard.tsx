@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
-import { timeStamp } from "console";
+// import { timeStamp } from "console";
 const problem_statements = [
   { value: "1", label: "1" },
   { value: "2", label: "2" },
@@ -226,7 +226,7 @@ const Dashboard = () => {
   };
 
  const onSubmitps = async(data  : any) => {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { error } = await supabase.auth.getUser();
       if(error) {
         console.error("Error fetching user details:", error);
         return;
@@ -254,7 +254,7 @@ const Dashboard = () => {
  }
  const onSubmit = async (data: any) => {
     // try {
-      const { data: { user }, error } = await supabase.auth.getUser();
+      const { error } = await supabase.auth.getUser();
       if(error) {
         console.error("Error fetching user details:", error);
         return;
