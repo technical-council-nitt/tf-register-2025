@@ -84,7 +84,7 @@ const Dashboard = () => {
   const [userInfo, setUserInfo] = useState<any>(null);
   const navigate = useNavigate();
   const schema = z.object({
-    teamName: z.string().min(1, "Name is required"),
+    // teamName: z.string().min(1, "Name is required"),
     // rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
     // personalEmail: z.string().email("Invalid email address"),
     // hostel: z.string().nonempty("Hostel is required"),
@@ -261,7 +261,7 @@ const Dashboard = () => {
       }
 
     const file = data.file[0];
-    const filename = `midreview/${team?.domain}/${team?.problem_statement}/${data.teamName}`;
+    const filename = `midreview/${team?.domain}/${team?.problem_statement}/${team?.name}`;
 
     const { data : uploadData, error: uploadError} = await supabase.storage.from("midreview_bucket").upload(filename,file, {
       upsert: true
@@ -274,7 +274,7 @@ const Dashboard = () => {
     .from("midreviewsubmissions")
     .insert([{
       // team_id: data.team_id,
-      team_name: data.teamName,
+      team_name: team?.name,
       // comments: data.comments,
       timestamp: new Date().toISOString(),
       file_path: uploadData.path,
@@ -515,7 +515,7 @@ const Dashboard = () => {
                     className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
                   >
                     {/* First Name */}
-                    <FormField
+                    {/* <FormField
                       name="teamName"
                       render={({ field }) => (
                         <FormItem>
@@ -526,7 +526,7 @@ const Dashboard = () => {
                           <FormMessage className="text-red-500" />
                         </FormItem>
                       )}
-                    />
+                    /> */}
 
                     {/* Roll Number */}
                     <FormField
