@@ -77,6 +77,7 @@ const Profile = () => {
           console.error("Error fetching user details:", error);
           window.location.href = "/login";
           return;
+
         }
 
         const { data: userData } = await supabase.from("users").select("*").eq("user_id", user?.id).single();

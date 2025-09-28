@@ -330,7 +330,7 @@ const Dashboard = () => {
     const file = data.file[0];
     const filename = `finalreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
 
-    const { data : uploadData, error: uploadError} = await supabase.storage.from("finalreview_bucket").upload(filename,file, {
+    const { data : uploadData, error: uploadError} = await supabase.storage.from("midreview_bucket").upload(filename,file, {
       upsert: true
     });
     if(uploadError){
