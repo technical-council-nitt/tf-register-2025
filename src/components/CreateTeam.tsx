@@ -91,6 +91,8 @@ const CreateTeam = () => {
             contact_number: data.contactNumber,
             user_email_param: userInfo.email,
             new_team_id: teamId,
+            problem_statement : null,
+            domain : null,
         });
 
         if (error) {

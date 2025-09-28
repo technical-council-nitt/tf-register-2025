@@ -1,12 +1,33 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
+// import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Copy, Loader2 } from "lucide-react";
 import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
 import { IoExitOutline } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
+import {
+  Form,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormMessage,
+  FormField,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +39,19 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
+import { timeStamp } from "console";
+const problem_statements = [
+  { value: "1", label: "1" },
+  { value: "2", label: "2" },
+  { value: "3", label: "3" },
+];
+const domains = [
+  { value : "software" , label:"software" },
+  { value : "hardware" , label:"hardware" },
+  { value : "management" , label:"management" },
+  { value : "entrepreneurship", label:"entrepreneurship" },
+];
+
 
 type TeamMember = {
   user_id: string;
@@ -35,7 +69,11 @@ type Team = {
   contact: string;
   leader: string;
   leader_user_id: string;
+  problem_statement:string;
+  domain:string;
 };
+
+
 
 const Dashboard = () => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -45,7 +83,57 @@ const Dashboard = () => {
   const [isLead, setIsLead] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>(null);
   const navigate = useNavigate();
+  const schema = z.object({
+    teamName: z.string().min(1, "Name is required"),
+    // rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
+    // personalEmail: z.string().email("Invalid email address"),
+    // hostel: z.string().nonempty("Hostel is required"),
+    // gender: z.string().nonempty("Gender is required"),
+    timeStamp: z.string(),
+    file: z.any().refine((fileList) => fileList && fileList.length === 1, "File is required"),
+  });
 
+  const psschema = z.object({
+    problem_statement: z.string().nonempty("Problem Statement is required"),
+    domain: z.string().nonempty("Domain is required"),
+  });
+  //  const testUpload = async () => {
+  //   const testFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
+    
+  //   const { data, error } = await supabase.storage
+  //     .from('midreview_bucket')
+  //     .upload('test.txt', testFile);
+      
+  //   console.log('Test upload:', { data, error });
+  // };
+
+  // // Call it in useEffect to test immediately when component loads
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   const fetchDetails = async () => {
+  //     // ... your existing fetchDetails code
+
+  //     // Add this line at the end of fetchDetails
+  //     await testUpload(); // Test the upload
+  //   };
+  //   fetchDetails();
+  // }, []);
+  const form = useForm({
+      resolver: zodResolver(schema),
+      defaultValues: {
+        teamName: "",
+        timeStamp: "",
+        file: null,
+      },
+    });
+
+  const psform =  useForm({
+    resolver:zodResolver(psschema),
+    defaultValues : {
+      problem_statement : "",
+      domain : "",
+    }
+  })
   useEffect(() => {
     setIsLoading(true);
     const fetchDetails = async () => {
@@ -72,6 +160,14 @@ const Dashboard = () => {
         console.log(user);
         setUserInfo(user);
         setUsername(userData?.name);
+        // form.reset({
+        //   name: userData?.name || "",
+        //   rollNumber: userData?.roll_number || "",
+        //   personalEmail: user?.email || userData?.email || "",
+        //   hostel: userData?.hostel || "",
+        //   gender: userData?.gender || "",
+        //   mess: userData?.mess || "",
+        // });
         const { data: team, error: e } = await supabase
           .from("teams")
           .select(
@@ -95,6 +191,7 @@ const Dashboard = () => {
         console.error(error);
         setIsLoading(false);
       }
+    // await testUpload();
     };
     fetchDetails();
   }, []);
@@ -128,6 +225,67 @@ const Dashboard = () => {
     return teamId;
   };
 
+ const onSubmitps = async(data  : any) => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+      if(error) {
+        console.error("Error fetching user details:", error);
+        return;
+      }
+
+      const { error : pserror} = await supabase
+      .from("teams")
+      .update({
+        problem_statement : data.problem_statement,
+        domain : data.domain,
+      })
+      .eq("team_id", team?.team_id);
+      if (pserror) {
+        console.error("Submission ps error:", pserror);
+        return;
+      }
+
+      if (team) {
+        setTeam({
+          ...team,
+          problem_statement: data.problem_statement,
+          domain: data.domain,
+        });
+      }
+ }
+ const onSubmit = async (data: any) => {
+    // try {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if(error) {
+        console.error("Error fetching user details:", error);
+        return;
+      }
+
+    const file = data.file[0];
+    const filename = `midreview/${team?.domain}/${team?.problem_statement}/${data.teamName}`;
+
+    const { data : uploadData, error: uploadError} = await supabase.storage.from("midreview_bucket").upload(filename,file, {
+      upsert: true
+    });
+    if(uploadError){
+      console.error("File upload error", uploadError);
+      return;
+    }
+     const { error: dbError } = await supabase
+    .from("midreviewsubmissions")
+    .insert([{
+      // team_id: data.team_id,
+      team_name: data.teamName,
+      // comments: data.comments,
+      timestamp: new Date().toISOString(),
+      file_path: uploadData.path,
+      domain: team?.domain,
+      problem_statement : team?.problem_statement,
+    }]);
+    if (dbError) {
+    console.error("Submission DB error:", dbError);
+    return;
+  }
+  };
   const handleGenerateNewTeamId = async () => {
     const newTeamId = await generate_team_id();
 
@@ -350,8 +508,182 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>  
+      <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
+                  >
+                    {/* First Name */}
+                    <FormField
+                      name="teamName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Team Name</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Full Name" {...field} className="bg-[#1a1a1a] border border-gray-600 mt-0 rounded-md p-2" />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Roll Number */}
+                    <FormField
+                      name="file"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Upload File</FormLabel>
+                          <FormControl>
+                            <Input type="file" accept=".ppt,.pptx" onChange={e => field.onChange(e.target.files)} placeholder="Enter Roll Number" className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Personal Email
+                    <FormField
+                      name="personalEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Personal Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" disabled />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    /> */}
+
+                    {/* Hostel */}
+                    {/* <FormField
+                      name="hostel"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Hostel</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Enter your hostel name" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    /> */}
+
+                    {/* Mess */}
+                    {/* <FormField
+                      name="mess"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mess</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Enter your Mess name" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    /> */}
+
+                    {/* Gender (Select) */}
+                    {/* <FormField
+                      name="problem_statement"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Problem Statement</FormLabel>
+                          <FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                                <SelectValue placeholder="Select Gender" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {problem_statements.map((problem_statement) => (
+                                  <SelectItem key={problem_statement.value} value={problem_statement.value}>
+                                    {problem_statement.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    /> */}
+                    <div className="w-full flex md:flex-row-reverse">
+                      <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
+                        Proceed
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+                <Form {...psform}>
+                  <form
+                    onSubmit={psform.handleSubmit(onSubmitps)}
+                    className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
+                  >
+                    <FormField
+                      name="domain"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Domain</FormLabel>
+                          <FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                                <SelectValue placeholder="Select Domain" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {domains.map((domain) => (
+                                  <SelectItem key={domain.value} value={domain.value}>
+                                    {domain.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name="problem_statement"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Problem Statement</FormLabel>
+                          <FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                                <SelectValue placeholder="Select Problem Statement" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {problem_statements.map((problem_statement) => (
+                                  <SelectItem key={problem_statement.value} value={problem_statement.value}>
+                                    {problem_statement.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="w-full flex md:flex-row-reverse">
+                      <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
+                        Proceed
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
       </div>
+      
     );
   };
 
