@@ -82,6 +82,7 @@ const Dashboard = () => {
   const [userName, setUsername] = useState<string | undefined>(undefined);
   const [isLead, setIsLead] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [apiValue, setApiValue] = useState<number | null>(null);
   const navigate = useNavigate();
   const schema = z.object({
     // teamName: z.string().min(1, "Name is required"),
@@ -194,6 +195,20 @@ const Dashboard = () => {
     // await testUpload();
     };
     fetchDetails();
+  }, []);
+
+  useEffect(() => {
+    const testApi = async () => {
+      try {
+        const response = await fetch('/api/test');
+        const data = await response.json();
+        setApiValue(data.value);
+        console.log('API response:', data);
+      } catch (error) {
+        console.error('API call failed:', error);
+      }
+    };
+    testApi();
   }, []);
 
   const handlePay = () => {
@@ -444,6 +459,7 @@ const Dashboard = () => {
                 <h1 className="font-spacegrotesk text-3xl lg:text-5xl font-medium">
                   Dashboard
                 </h1>
+                <p className="text-white mb-2">API Test Value: {apiValue !== null ? apiValue : 'Loading...'}</p>
                 <span className="text-neutral-500 pt-2">
                   Invite your teammates by sharing the team ID.{" "}
                 </span>

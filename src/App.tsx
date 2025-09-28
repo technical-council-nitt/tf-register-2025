@@ -17,6 +17,7 @@ export default function App() {
                     <Route path="/join-team" element={<JoinTeam />}></Route>
                     <Route path="/login" element={<Login />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
+                    <Route path="/dashboard" element={<Dashboard />}></Route>
                     <Route path="/team/:teamId" element={<Dashboard />}></Route>
                     <Route path="/:teamId/pay" element={<Payment />} />
                 </Routes>
