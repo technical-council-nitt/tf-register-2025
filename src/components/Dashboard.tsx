@@ -261,7 +261,7 @@ const Dashboard = () => {
       }
 
     const file = data.file[0];
-    const filename = `midreview/${team?.domain}/${team?.problem_statement}/${team?.name}`;
+    const filename = `midreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
 
     const { data : uploadData, error: uploadError} = await supabase.storage.from("midreview_bucket").upload(filename,file, {
       upsert: true
@@ -270,20 +270,50 @@ const Dashboard = () => {
       console.error("File upload error", uploadError);
       return;
     }
-     const { error: dbError } = await supabase
+    const { data: existingRows, error: fetchError } = await supabase
     .from("midreviewsubmissions")
-    .insert([{
-      // team_id: data.team_id,
-      team_name: team?.name,
-      // comments: data.comments,
-      timestamp: new Date().toISOString(),
-      file_path: uploadData.path,
-      domain: team?.domain,
-      problem_statement : team?.problem_statement,
-    }]);
-    if (dbError) {
-    console.error("Submission DB error:", dbError);
+    .select("*")
+    .eq("team_name", `${team?.name}-${team?.team_id}`);  // Use .eq("team_id", team?.id) if possible!
+
+  if (fetchError) {
+    console.error("Fetch error:", fetchError);
     return;
+  }
+
+  if (existingRows && existingRows.length > 0) {
+    // Team already has a submission, update it
+    const { error: updateError } = await supabase
+      .from("midreviewsubmissions")
+      .update({
+        problem_statement: team?.problem_statement,
+        domain: team?.domain,
+        file_path: uploadData.path,
+        timestamp: new Date().toISOString(),
+      })
+      .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
+
+    if(updateError){
+      console.error("Update error:", updateError);
+      return;
+    }
+    // Optionally, update file_path or other fields as needed
+  } else {
+    // No submission for this team, insert new
+    const { error: dbError } = await supabase
+      .from("midreviewsubmissions")
+      .insert([{
+        // team_id: data.team_id,
+        team_name: `${team?.name}-${team?.team_id}`,
+        // comments: data.comments,
+        timestamp: new Date().toISOString(),
+        file_path: uploadData.path,
+        domain: team?.domain,
+        problem_statement : team?.problem_statement,
+      }]);
+    if (dbError) {
+      console.error("Submission DB error:", dbError);
+      return;
+    }
   }
   };
   const handleGenerateNewTeamId = async () => {
