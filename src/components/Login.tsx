@@ -11,6 +11,7 @@ const Login = () => {
         } catch (error) {
             console.error('Error getting OAuth URL:', error);
         }
+       
     }
 
     return (
