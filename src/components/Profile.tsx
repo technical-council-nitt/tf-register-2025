@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,8 +20,10 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
-import WaterDropGrid from "./WaterDropGrid";
 import { supabase } from "@/utiils/supabase";
+
+// Lazy load the heavy 3D component
+const WaterDropGrid = lazy(() => import("./WaterDropGrid"));
 
 const genders = [
   { value: "male", label: "Male" },
@@ -150,7 +152,9 @@ const Profile = () => {
       </nav>
       <div className="flex">
         <div className="bg-white w-full md:block hidden overflow-hidden">
-          <WaterDropGrid />
+          <Suspense fallback={<div className="flex items-center justify-center h-screen bg-white"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div></div>}>
+            <WaterDropGrid />
+          </Suspense>
         </div>
         <div className="flex flex-col w-full justify-center items-center min-h-screen bg-black p-4">
           <div className="flex self-start ml-4 mb-2 cursor-pointer">
