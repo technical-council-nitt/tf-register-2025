@@ -507,7 +507,8 @@ const Dashboard = () => {
                   )}
               </div>
             </div>
-            <div className="lg:w-[60%] h-full lg:pr-8">
+            <div className="flex">
+            <div className="lg:w-[60%] h-full lg:pr-8 ">
               <div className="w-full h-full pt-3 mt-4 flex flex-col">
                 <h1 className="font-spacegrotesk text-3xl lg:text-5xl font-medium">
                   Dashboard
@@ -575,6 +576,121 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+            <div className="absolute bottom-40 right-10">
+            <Form {...form} >
+                  <form
+                    onSubmit={form.handleSubmit(onMidReviewSubmit)}
+                    className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
+                  >
+                    {/* First Name */}
+                    {/* <FormField
+                      name="teamName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Team Name</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="Full Name" {...field} className="bg-[#1a1a1a] border border-gray-600 mt-0 rounded-md p-2" />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                    /> */}
+
+                    {/* Roll Number */}
+                    <div className="flex justify-center items-center">
+
+                    <FormField
+                      name="file"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Upload File</FormLabel>
+                          <FormControl>
+                            <Input type="file" accept=".ppt,.pptx" onChange={e => field.onChange(e.target.files)} placeholder="Enter Roll Number" className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                        </FormItem>
+                      )}
+                      />
+
+                    {/* Personal Email
+                    <FormField
+                    name="personalEmail"
+                    render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Personal Email</FormLabel>
+                      <FormControl>
+                      <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" disabled />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                      </FormItem>
+                      )}
+                      /> */}
+
+                    {/* Hostel */}
+                    {/* <FormField
+                      name="hostel"
+                      render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Hostel</FormLabel>
+                        <FormControl>
+                        <Input type="text" placeholder="Enter your hostel name" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" />
+                        </FormControl>
+                        <FormMessage className="text-red-500" />
+                        </FormItem>
+                        )}
+                        /> */}
+
+                    {/* Mess */}
+                    {/* <FormField
+                      name="mess"
+                      render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Mess</FormLabel>
+                        <FormControl>
+                        <Input type="text" placeholder="Enter your Mess name" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                        </FormControl>
+                        <FormMessage className="text-red-500" />
+                        </FormItem>
+                        )}
+                        /> */}
+
+                    {/* Gender (Select) */}
+                    {/* <FormField
+                      name="problem_statement"
+                      render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Problem Statement</FormLabel>
+                        <FormControl>
+                        <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        >
+                        <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                        <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        {problem_statements.map((problem_statement) => (
+                          <SelectItem key={problem_statement.value} value={problem_statement.value}>
+                          {problem_statement.label}
+                          </SelectItem>
+                          ))}
+                          </SelectContent>
+                          </Select>
+                          </FormControl>
+                          <FormMessage className="text-red-500" />
+                          </FormItem>
+                          )}
+                          /> */}
+                  
+                      <Button type="submit" className="md:px-16 md:w-auto mt-7  w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
+                        Proceed
+                      </Button>
+               
+                          </div>
+                  </form>
+                </Form>
+                </div>
+                </div>
           </div>
           <div className="border-t-[1px] p-4 px-8 border-neutral-800">
             <div className="flex justify-between items-center">
@@ -607,115 +723,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>  
-      <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onMidReviewSubmit)}
-                    className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
-                  >
-                    {/* First Name */}
-                    {/* <FormField
-                      name="teamName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Team Name</FormLabel>
-                          <FormControl>
-                            <Input type="text" placeholder="Full Name" {...field} className="bg-[#1a1a1a] border border-gray-600 mt-0 rounded-md p-2" />
-                          </FormControl>
-                          <FormMessage className="text-red-500" />
-                        </FormItem>
-                      )}
-                    /> */}
-
-                    {/* Roll Number */}
-                    <FormField
-                      name="file"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Upload File</FormLabel>
-                          <FormControl>
-                            <Input type="file" accept=".ppt,.pptx" onChange={e => field.onChange(e.target.files)} placeholder="Enter Roll Number" className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
-                          </FormControl>
-                          <FormMessage className="text-red-500" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Personal Email
-                    <FormField
-                      name="personalEmail"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Personal Email</FormLabel>
-                          <FormControl>
-                            <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" disabled />
-                          </FormControl>
-                          <FormMessage className="text-red-500" />
-                        </FormItem>
-                      )}
-                    /> */}
-
-                    {/* Hostel */}
-                    {/* <FormField
-                      name="hostel"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Hostel</FormLabel>
-                          <FormControl>
-                            <Input type="text" placeholder="Enter your hostel name" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" />
-                          </FormControl>
-                          <FormMessage className="text-red-500" />
-                        </FormItem>
-                      )}
-                    /> */}
-
-                    {/* Mess */}
-                    {/* <FormField
-                      name="mess"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mess</FormLabel>
-                          <FormControl>
-                            <Input type="text" placeholder="Enter your Mess name" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
-                          </FormControl>
-                          <FormMessage className="text-red-500" />
-                        </FormItem>
-                      )}
-                    /> */}
-
-                    {/* Gender (Select) */}
-                    {/* <FormField
-                      name="problem_statement"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Problem Statement</FormLabel>
-                          <FormControl>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
-                                <SelectValue placeholder="Select Gender" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {problem_statements.map((problem_statement) => (
-                                  <SelectItem key={problem_statement.value} value={problem_statement.value}>
-                                    {problem_statement.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage className="text-red-500" />
-                        </FormItem>
-                      )}
-                    /> */}
-                    <div className="w-full flex md:flex-row-reverse">
-                      <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
-                        Proceed
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
+      
                 <Form {...psform}>
                   <form
                     onSubmit={psform.handleSubmit(onSubmitps)}
