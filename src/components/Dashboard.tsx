@@ -237,7 +237,7 @@ const Dashboard = () => {
     const requestBody = {
       userId: "user-id",
       teamName: "team-name", 
-      teamId: team?.team_id,
+      teamId: teamId,
     };
     console.log("Request body:", requestBody);
     
