@@ -615,7 +615,7 @@ const doPayment = async (order: Order): Promise<void> => {
   }
 
   console.log("Team: ", team);
-
+  console.log(paymentCount <= +import.meta.env.TEAM_CAP);
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <NavBar userName={userName} />
