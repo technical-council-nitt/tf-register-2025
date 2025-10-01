@@ -87,6 +87,7 @@ const Dashboard = () => {
   const [userName, setUsername] = useState<string | undefined>(undefined);
   const [isLead, setIsLead] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [paymentCount, setPaymentCount] = useState<number>(0);
   const navigate = useNavigate();
   // const schema = z.object({
     // teamName: z.string().min(1, "Name is required"),
@@ -261,11 +262,33 @@ const Dashboard = () => {
     throw error; // Re-throw to see the full error
   }
 };
+const Payment = () => {
+    
+     
+    
+      useEffect(() => {
+        const fetchSuccessCount = async () => {
+       
+          const { count } = await supabase
+            .from('payments')
+            .select('*', { count: 'exact' })
+            .eq('status', 'SUCCESS');
+            if(count!==null){
+       
+          setPaymentCount(count);
+          console.log('Number of successful payments:', count);
+        
+      }
+    };
+        fetchSuccessCount();
+      }, []);}
+      Payment();
 
 const handlePay = async (): Promise<void> => {
   console.log("Handle pay called");
   console.log("Team members count:", team?.members?.length);
   console.log("Team data:", team);
+      
 
   if (team?.members.length && team.members.length < 4) {
     console.log("❌ Payment blocked: Team has less than 4 members");
@@ -613,8 +636,8 @@ const doPayment = async (order: Order): Promise<void> => {
               {team.name}
             </h2>
             <div className="absolute bottom-0 right-0 p-6 pb-4">
-              {(team.payment_status === "Pending" ||
-                team.payment_status === "Failed") && (
+              {((team.payment_status === "Pending" ||
+                team.payment_status === "Failed") && paymentCount < 4) && (
                   <Button
                     className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-100 transition duration-300 flex items-center justify-center gap-2"
                     onClick={handlePay}
