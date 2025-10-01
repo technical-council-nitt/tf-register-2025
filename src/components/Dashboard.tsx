@@ -235,8 +235,8 @@ const Dashboard = () => {
     console.log("Environment variable VITE_PROD_URL_BACKEND:", import.meta.env.VITE_PROD_URL_BACKEND);
     
     const requestBody = {
-      userId: "user-id",
-      teamName: "sdfghjkl", 
+      userId: teamId,
+      teamName: "team-name", 
       teamId: teamId,
     };
     console.log("Request body:", requestBody);
