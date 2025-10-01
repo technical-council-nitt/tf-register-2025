@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { z } from "zod";
 import { load, CashfreeInstance } from "@cashfreepayments/cashfree-js";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 // import { Button } from "./ui/button";
@@ -13,21 +13,21 @@ import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
 import { IoExitOutline } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
-import {
-  Form,
-  FormItem,
-  FormControl,
-  FormLabel,
-  FormMessage,
-  FormField,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+// import {
+//   Form,
+//   FormItem,
+//   FormControl,
+//   FormLabel,
+//   FormMessage,
+//   FormField,
+// } from "@/components/ui/form";
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectValue,
+//   SelectContent,
+//   SelectItem,
+// } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -41,17 +41,17 @@ import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
 //import { set } from "animejs";
 // import { timeStamp } from "console";
-const problem_statements = [
-  { value: "1", label: "1" },
-  { value: "2", label: "2" },
-  { value: "3", label: "3" },
-];
-const domains = [
-  { value: "software", label: "software" },
-  { value: "hardware", label: "hardware" },
-  { value: "management", label: "management" },
-  { value: "entrepreneurship", label: "entrepreneurship" },
-];
+// const problem_statements = [
+//   { value: "1", label: "1" },
+//   { value: "2", label: "2" },
+//   { value: "3", label: "3" },
+// ];
+// const domains = [
+//   { value: "software", label: "software" },
+//   { value: "hardware", label: "hardware" },
+//   { value: "management", label: "management" },
+//   { value: "entrepreneurship", label: "entrepreneurship" },
+// ];
 
 
 type TeamMember = {
@@ -88,20 +88,20 @@ const Dashboard = () => {
   const [isLead, setIsLead] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>(null);
   const navigate = useNavigate();
-  const schema = z.object({
+  // const schema = z.object({
     // teamName: z.string().min(1, "Name is required"),
     // rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
     // personalEmail: z.string().email("Invalid email address"),
     // hostel: z.string().nonempty("Hostel is required"),
     // gender: z.string().nonempty("Gender is required"),
-    timeStamp: z.string(),
-    file: z.any().refine((fileList) => fileList && fileList.length === 1, "File is required"),
-  });
+  //   timeStamp: z.string(),
+  //   file: z.any().refine((fileList) => fileList && fileList.length === 1, "File is required"),
+  // });
 
-  const psschema = z.object({
-    problem_statement: z.string().nonempty("Problem Statement is required"),
-    domain: z.string().nonempty("Domain is required"),
-  });
+  // const psschema = z.object({
+  //   problem_statement: z.string().nonempty("Problem Statement is required"),
+  //   domain: z.string().nonempty("Domain is required"),
+  // });
   //  const testUpload = async () => {
   //   const testFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
 
@@ -124,22 +124,22 @@ const Dashboard = () => {
   //   fetchDetails();
   // }, []);
 
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      teamName: "",
-      timeStamp: "",
-      file: null,
-    },
-  });
+  // const form = useForm({
+  //   resolver: zodResolver(schema),
+  //   defaultValues: {
+  //     teamName: "",
+  //     timeStamp: "",
+  //     file: null,
+  //   },
+  // });
 
-  const psform = useForm({
-    resolver: zodResolver(psschema),
-    defaultValues: {
-      problem_statement: "",
-      domain: "",
-    }
-  })
+  // const psform = useForm({
+  //   resolver: zodResolver(psschema),
+  //   defaultValues: {
+  //     problem_statement: "",
+  //     domain: "",
+  //   }
+  // })
 
 
   useEffect(() => {
@@ -235,8 +235,8 @@ const Dashboard = () => {
     console.log("Environment variable VITE_PROD_URL_BACKEND:", import.meta.env.VITE_PROD_URL_BACKEND);
     
     const requestBody = {
-      userId: "user-id",
-      teamName: "sdfghjkl", 
+      userId: teamId,
+      teamName: "team-name", 
       teamId: teamId,
     };
     console.log("Request body:", requestBody);
@@ -344,162 +344,162 @@ const doPayment = async (order: Order): Promise<void> => {
     return teamId;
   };
 
-  const onSubmitps = async (data: any) => {
-    const { error } = await supabase.auth.getUser();
-    if (error) {
-      console.error("Error fetching user details:", error);
-      return;
-    }
+  // const onSubmitps = async (data: any) => {
+  //   const { error } = await supabase.auth.getUser();
+  //   if (error) {
+  //     console.error("Error fetching user details:", error);
+  //     return;
+  //   }
 
-    const { error: pserror } = await supabase
-      .from("teams")
-      .update({
-        problem_statement: data.problem_statement,
-        domain: data.domain,
-      })
-      .eq("team_id", team?.team_id);
-    if (pserror) {
-      console.error("Submission ps error:", pserror);
-      return;
-    }
+  //   const { error: pserror } = await supabase
+  //     .from("teams")
+  //     .update({
+  //       problem_statement: data.problem_statement,
+  //       domain: data.domain,
+  //     })
+  //     .eq("team_id", team?.team_id);
+  //   if (pserror) {
+  //     console.error("Submission ps error:", pserror);
+  //     return;
+  //   }
 
-    if (team) {
-      setTeam({
-        ...team,
-        problem_statement: data.problem_statement,
-        domain: data.domain,
-      });
-    }
-  }
-  const onMidReviewSubmit = async (data: any) => {
-    // try {
-    const { error } = await supabase.auth.getUser();
-    if (error) {
-      console.error("Error fetching user details:", error);
-      return;
-    }
+  //   if (team) {
+  //     setTeam({
+  //       ...team,
+  //       problem_statement: data.problem_statement,
+  //       domain: data.domain,
+  //     });
+  //   }
+  // }
+  // const onMidReviewSubmit = async (data: any) => {
+  //   // try {
+  //   const { error } = await supabase.auth.getUser();
+  //   if (error) {
+  //     console.error("Error fetching user details:", error);
+  //     return;
+  //   }
 
-    const file = data.file[0];
-    const filename = `midreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
+  //   const file = data.file[0];
+  //   const filename = `midreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
 
-    const { data: uploadData, error: uploadError } = await supabase.storage.from("midreview_bucket").upload(filename, file, {
-      upsert: true
-    });
-    if (uploadError) {
-      console.error("File upload error", uploadError);
-      return;
-    }
-    const { data: existingRows, error: fetchError } = await supabase
-      .from("midreviewsubmissions")
-      .select("*")
-      .eq("team_name", `${team?.name}-${team?.team_id}`);  // Use .eq("team_id", team?.id) if possible!
+  //   const { data: uploadData, error: uploadError } = await supabase.storage.from("midreview_bucket").upload(filename, file, {
+  //     upsert: true
+  //   });
+  //   if (uploadError) {
+  //     console.error("File upload error", uploadError);
+  //     return;
+  //   }
+  //   const { data: existingRows, error: fetchError } = await supabase
+  //     .from("midreviewsubmissions")
+  //     .select("*")
+  //     .eq("team_name", `${team?.name}-${team?.team_id}`);  // Use .eq("team_id", team?.id) if possible!
 
-    if (fetchError) {
-      console.error("Fetch error:", fetchError);
-      return;
-    }
+  //   if (fetchError) {
+  //     console.error("Fetch error:", fetchError);
+  //     return;
+  //   }
 
-    if (existingRows && existingRows.length > 0) {
-      // Team already has a submission, update it
-      const { error: updateError } = await supabase
-        .from("midreviewsubmissions")
-        .update({
-          problem_statement: team?.problem_statement,
-          domain: team?.domain,
-          file_path: uploadData.path,
-          timestamp: new Date().toISOString(),
-        })
-        .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
+  //   if (existingRows && existingRows.length > 0) {
+  //     // Team already has a submission, update it
+  //     const { error: updateError } = await supabase
+  //       .from("midreviewsubmissions")
+  //       .update({
+  //         problem_statement: team?.problem_statement,
+  //         domain: team?.domain,
+  //         file_path: uploadData.path,
+  //         timestamp: new Date().toISOString(),
+  //       })
+  //       .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
 
-      if (updateError) {
-        console.error("Update error:", updateError);
-        return;
-      }
-      // Optionally, update file_path or other fields as needed
-    } else {
-      // No submission for this team, insert new
-      const { error: dbError } = await supabase
-        .from("midreviewsubmissions")
-        .insert([{
-          // team_id: data.team_id,
-          team_name: `${team?.name}-${team?.team_id}`,
-          // comments: data.comments,
-          timestamp: new Date().toISOString(),
-          file_path: uploadData.path,
-          domain: team?.domain,
-          problem_statement: team?.problem_statement,
-        }]);
-      if (dbError) {
-        console.error("Submission DB error:", dbError);
-        return;
-      }
-    }
-  };
+  //     if (updateError) {
+  //       console.error("Update error:", updateError);
+  //       return;
+  //     }
+  //     // Optionally, update file_path or other fields as needed
+  //   } else {
+  //     // No submission for this team, insert new
+  //     const { error: dbError } = await supabase
+  //       .from("midreviewsubmissions")
+  //       .insert([{
+  //         // team_id: data.team_id,
+  //         team_name: `${team?.name}-${team?.team_id}`,
+  //         // comments: data.comments,
+  //         timestamp: new Date().toISOString(),
+  //         file_path: uploadData.path,
+  //         domain: team?.domain,
+  //         problem_statement: team?.problem_statement,
+  //       }]);
+  //     if (dbError) {
+  //       console.error("Submission DB error:", dbError);
+  //       return;
+  //     }
+  //   }
+  // };
 
-  const onFinalReviewSubmit = async (data: any) => {
-    // try {
-    const { error } = await supabase.auth.getUser();
-    if (error) {
-      console.error("Error fetching user details:", error);
-      return;
-    }
+  // const onFinalReviewSubmit = async (data: any) => {
+  //   // try {
+  //   const { error } = await supabase.auth.getUser();
+  //   if (error) {
+  //     console.error("Error fetching user details:", error);
+  //     return;
+  //   }
 
-    const file = data.file[0];
-    const filename = `finalreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
+  //   const file = data.file[0];
+  //   const filename = `finalreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
 
-    const { data: uploadData, error: uploadError } = await supabase.storage.from("midreview_bucket").upload(filename, file, {
-      upsert: true
-    });
-    if (uploadError) {
-      console.error("File upload error", uploadError);
-      return;
-    }
-    const { data: existingRows, error: fetchError } = await supabase
-      .from("finalreviewsubmissions")
-      .select("*")
-      .eq("team_name", `${team?.name}-${team?.team_id}`);  // Use .eq("team_id", team?.id) if possible!
+  //   const { data: uploadData, error: uploadError } = await supabase.storage.from("midreview_bucket").upload(filename, file, {
+  //     upsert: true
+  //   });
+  //   if (uploadError) {
+  //     console.error("File upload error", uploadError);
+  //     return;
+  //   }
+  //   const { data: existingRows, error: fetchError } = await supabase
+  //     .from("finalreviewsubmissions")
+  //     .select("*")
+  //     .eq("team_name", `${team?.name}-${team?.team_id}`);  // Use .eq("team_id", team?.id) if possible!
 
-    if (fetchError) {
-      console.error("Fetch error:", fetchError);
-      return;
-    }
+  //   if (fetchError) {
+  //     console.error("Fetch error:", fetchError);
+  //     return;
+  //   }
 
-    if (existingRows && existingRows.length > 0) {
-      // Team already has a submission, update it
-      const { error: updateError } = await supabase
-        .from("finalreviewsubmissions")
-        .update({
-          problem_statement: team?.problem_statement,
-          domain: team?.domain,
-          file_path: uploadData.path,
-          timestamp: new Date().toISOString(),
-        })
-        .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
+  //   if (existingRows && existingRows.length > 0) {
+  //     // Team already has a submission, update it
+  //     const { error: updateError } = await supabase
+  //       .from("finalreviewsubmissions")
+  //       .update({
+  //         problem_statement: team?.problem_statement,
+  //         domain: team?.domain,
+  //         file_path: uploadData.path,
+  //         timestamp: new Date().toISOString(),
+  //       })
+  //       .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
 
-      if (updateError) {
-        console.error("Update error:", updateError);
-        return;
-      }
-      // Optionally, update file_path or other fields as needed
-    } else {
-      // No submission for this team, insert new
-      const { error: dbError } = await supabase
-        .from("finalreviewsubmissions")
-        .insert([{
-          // team_id: data.team_id,
-          team_name: `${team?.name}-${team?.team_id}`,
-          // comments: data.comments,
-          timestamp: new Date().toISOString(),
-          file_path: uploadData.path,
-          domain: team?.domain,
-          problem_statement: team?.problem_statement,
-        }]);
-      if (dbError) {
-        console.error("Submission DB error:", dbError);
-        return;
-      }
-    }
-  };
+  //     if (updateError) {
+  //       console.error("Update error:", updateError);
+  //       return;
+  //     }
+  //     // Optionally, update file_path or other fields as needed
+  //   } else {
+  //     // No submission for this team, insert new
+  //     const { error: dbError } = await supabase
+  //       .from("finalreviewsubmissions")
+  //       .insert([{
+  //         // team_id: data.team_id,
+  //         team_name: `${team?.name}-${team?.team_id}`,
+  //         // comments: data.comments,
+  //         timestamp: new Date().toISOString(),
+  //         file_path: uploadData.path,
+  //         domain: team?.domain,
+  //         problem_statement: team?.problem_statement,
+  //       }]);
+  //     if (dbError) {
+  //       console.error("Submission DB error:", dbError);
+  //       return;
+  //     }
+  //   }
+  // };
 
   const handleGenerateNewTeamId = async () => {
     const newTeamId = await generate_team_id();
@@ -602,7 +602,7 @@ const doPayment = async (order: Order): Promise<void> => {
           <div
             className="lg:w-[40%] md:w-1/2 w-full"
             style={{
-              backgroundImage: `url('/team-card.svg')`,
+              backgroundImage: `url('/team-card2.svg')`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               aspectRatio: "343 / 216",
@@ -726,7 +726,6 @@ const doPayment = async (order: Order): Promise<void> => {
           </div>
         </div>
       </div>
-
       {/* <Form {...psform}>
         <form
           onSubmit={psform.handleSubmit(onSubmitps)}
@@ -841,6 +840,7 @@ const doPayment = async (order: Order): Promise<void> => {
           </div>
         </form> */}
       {/* </Form> */}
+
     </div>
 
   );
