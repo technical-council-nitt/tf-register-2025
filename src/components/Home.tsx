@@ -69,7 +69,7 @@ const Home = () => {
                         Welcome to TransfiNITTe
                     </h2>
                     <p className="text-sm md:text-base">
-                        Get ready for TransfiNITTe 2024 Hackathon. Join a team
+                        Get ready for TransfiNITTe 2025 Hackathon. Join a team
                         or create your own to participate!
                     </p>
                     {alertMessage && (
