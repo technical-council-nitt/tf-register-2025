@@ -615,6 +615,7 @@ const doPayment = async (order: Order): Promise<void> => {
   }
 
   console.log("Team: ", team);
+  console.log(import.meta.env.TEAM_CAP);
   console.log(paymentCount <= +import.meta.env.TEAM_CAP);
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
