@@ -25,7 +25,7 @@ const Login = () => {
                 <div className="w-full max-w-md space-y-6 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold">Login to your account</h2>
                     <p className="text-sm md:text-base text-gray-400">
-                        Sign in with your Google account to participate in TransfiNITTe 2024 Hackathon.
+                        Sign in with your Google account to participate in TransfiNITTe 2025 Hackathon.
                     </p>
                     <Button
                         className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
