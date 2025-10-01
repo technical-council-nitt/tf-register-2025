@@ -615,8 +615,8 @@ const doPayment = async (order: Order): Promise<void> => {
   }
 
   console.log("Team: ", team);
-  console.log(import.meta.env.TEAM_CAP);
-  console.log(paymentCount <= +import.meta.env.TEAM_CAP);
+  console.log(import.meta.env.VITE_TEAM_CAP);
+  console.log(paymentCount <= +import.meta.env.VITE_TEAM_CAP);
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <NavBar userName={userName} />
@@ -638,7 +638,7 @@ const doPayment = async (order: Order): Promise<void> => {
             </h2>
             <div className="absolute bottom-0 right-0 p-6 pb-4">
               {((team.payment_status === "Pending" ||
-                team.payment_status === "Failed") && paymentCount <= +import.meta.env.TEAM_CAP && isLead) && (
+                team.payment_status === "Failed") && paymentCount <= +import.meta.env.VITE_TEAM_CAP && isLead) && (
                   <Button
                     className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-100 transition duration-300 flex items-center justify-center gap-2"
                     onClick={handlePay}
