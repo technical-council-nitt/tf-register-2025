@@ -726,13 +726,12 @@ const doPayment = async (order: Order): Promise<void> => {
           </div>
         </div>
       </div>
-{/* 
-      <Form {...psform}>
+      {/* <Form {...psform}>
         <form
           onSubmit={psform.handleSubmit(onSubmitps)}
           className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
-        >
-          <FormField
+        > */}
+          {/* <FormField
             name="domain"
             render={({ field }) => (
               <FormItem>
@@ -757,8 +756,8 @@ const doPayment = async (order: Order): Promise<void> => {
                 <FormMessage className="text-red-500" />
               </FormItem>
             )}
-          />
-          <FormField
+          /> */}
+          {/* <FormField
             name="problem_statement"
             render={({ field }) => (
               <FormItem>
@@ -815,10 +814,10 @@ const doPayment = async (order: Order): Promise<void> => {
             </Button>
           </div>
         </form>
-      </Form>
+      </Form> */}
 
-      <Form {...form}>
-        <form
+      {/* <Form {...form}> */}
+        {/* <form
           onSubmit={form.handleSubmit(onFinalReviewSubmit)}
           className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
         >
@@ -839,8 +838,9 @@ const doPayment = async (order: Order): Promise<void> => {
               Submit Final Review
             </Button>
           </div>
-        </form>
-      </Form> */}
+        </form> */}
+      {/* </Form> */}
+
     </div>
 
   );
