@@ -726,7 +726,6 @@ const doPayment = async (order: Order): Promise<void> => {
           </div>
         </div>
       </div>
-
       {/* <Form {...psform}>
         <form
           onSubmit={psform.handleSubmit(onSubmitps)}
@@ -841,6 +840,7 @@ const doPayment = async (order: Order): Promise<void> => {
           </div>
         </form> */}
       {/* </Form> */}
+
     </div>
 
   );
