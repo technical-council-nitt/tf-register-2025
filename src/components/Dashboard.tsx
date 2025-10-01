@@ -602,7 +602,7 @@ const doPayment = async (order: Order): Promise<void> => {
           <div
             className="lg:w-[40%] md:w-1/2 w-full"
             style={{
-              backgroundImage: `url('/team-card.svg')`,
+              backgroundImage: `url('/team-card2.svg')`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               aspectRatio: "343 / 216",
