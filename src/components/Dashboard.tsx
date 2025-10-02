@@ -712,7 +712,7 @@ const doPayment = async (order: Order): Promise<void> => {
                                       field.onChange(val);          
                                    
                                     }}
-                                    value={team.domain ? team.domain : field.value}
+                                    value={field.value}
                                     disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
           
                                   >
