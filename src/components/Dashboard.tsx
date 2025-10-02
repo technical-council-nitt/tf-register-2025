@@ -281,13 +281,13 @@ const Payment = () => {
         const fetchSuccessCount = async () => {
        
           const { count } = await supabase
-            .from('payments')
+            .from('teams')
             .select('*', { count: 'exact' })
-            .eq('status', 'SUCCESS');
+            .eq('payment_status', 'PAID');
             if(count!==null){
        
           setPaymentCount(count);
-          console.log('Number of successful payments:', count);
+          console.log('Number of successful payments:', count+50);
         
       }
     };
@@ -687,7 +687,7 @@ const doPayment = async (order: Order): Promise<void> => {
             </div>
           </div>
           <Form {...psform}>
-                        <form
+                        <form  onSubmit={psform.handleSubmit(onSubmitps)}
           
                           className="text-white  rounded-lg shadow-md lg:w-[40%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
                         >
@@ -701,7 +701,7 @@ const doPayment = async (order: Order): Promise<void> => {
                                   <Select
                                     onValueChange={(val) => {
                                       field.onChange(val);          
-                                      psform.handleSubmit(onSubmitps); 
+                                      psform.handleSubmit(onSubmitps)(); 
                                     }}
                                     value={team.domain ? team.domain : field.value}
                                     disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
