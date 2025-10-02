@@ -1,6 +1,6 @@
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { load, CashfreeInstance } from "@cashfreepayments/cashfree-js";
 import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
@@ -13,21 +13,21 @@ import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
 import { IoExitOutline } from "react-icons/io5";
 import { FaRegTrashAlt } from "react-icons/fa";
-// import {
-//   Form,
-//   FormItem,
-//   FormControl,
-//   FormLabel,
-//   FormMessage,
-//   FormField,
-// } from "@/components/ui/form";
-// import {
-//   Select,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectContent,
-//   SelectItem,
-// } from "@/components/ui/select";
+import {
+  Form,
+  FormItem,
+  FormControl,
+  FormLabel,
+  FormMessage,
+  FormField,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -46,12 +46,12 @@ import { toast } from "sonner";
 //   { value: "2", label: "2" },
 //   { value: "3", label: "3" },
 // ];
-// const domains = [
-//   { value: "software", label: "software" },
-//   { value: "hardware", label: "hardware" },
-//   { value: "management", label: "management" },
-//   { value: "entrepreneurship", label: "entrepreneurship" },
-// ];
+const domains = [
+  { value: "software", label: "software" },
+  { value: "hardware", label: "hardware" },
+  { value: "management", label: "management" },
+  { value: "entrepreneurship", label: "entrepreneurship" },
+];
 
 
 type TeamMember = {
@@ -80,6 +80,7 @@ interface Order {
 }
 
 const Dashboard = () => {
+  const [popUp, setPopUp] = useState(false);
   const cashfreeRef = useRef<CashfreeInstance | null>(null);
   const { teamId } = useParams<{ teamId: string }>();
   const [team, setTeam] = useState<Team | null>(null);
@@ -88,6 +89,7 @@ const Dashboard = () => {
   const [isLead, setIsLead] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>(null);
   const [paymentCount, setPaymentCount] = useState<number>(0);
+
   const navigate = useNavigate();
   // const schema = z.object({
     // teamName: z.string().min(1, "Name is required"),
@@ -99,10 +101,10 @@ const Dashboard = () => {
   //   file: z.any().refine((fileList) => fileList && fileList.length === 1, "File is required"),
   // });
 
-  // const psschema = z.object({
-  //   problem_statement: z.string().nonempty("Problem Statement is required"),
-  //   domain: z.string().nonempty("Domain is required"),
-  // });
+  const psschema = z.object({
+    problem_statement: z.string().nonempty("Problem Statement is required"),
+    domain: z.string().nonempty("Domain is required"),
+  });
   //  const testUpload = async () => {
   //   const testFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
 
@@ -134,13 +136,22 @@ const Dashboard = () => {
   //   },
   // });
 
-  // const psform = useForm({
-  //   resolver: zodResolver(psschema),
-  //   defaultValues: {
-  //     problem_statement: "",
-  //     domain: "",
-  //   }
-  // })
+  const psform = useForm({
+    resolver: zodResolver(psschema),
+    defaultValues: {
+      problem_statement: "",
+      domain: "",
+    }
+  })
+
+  useEffect(() => {
+  if (team) {
+    psform.reset({
+      problem_statement: team.problem_statement || "",
+      domain: team.domain || "",
+    });
+  }
+}, [team]);
 
 
   useEffect(() => {
@@ -367,33 +378,33 @@ const doPayment = async (order: Order): Promise<void> => {
     return teamId;
   };
 
-  // const onSubmitps = async (data: any) => {
-  //   const { error } = await supabase.auth.getUser();
-  //   if (error) {
-  //     console.error("Error fetching user details:", error);
-  //     return;
-  //   }
+  const onSubmitps = async (data: any) => {
+    const { error } = await supabase.auth.getUser();
+    if (error) {
+      console.error("Error fetching user details:", error);
+      return;
+    }
 
-  //   const { error: pserror } = await supabase
-  //     .from("teams")
-  //     .update({
-  //       problem_statement: data.problem_statement,
-  //       domain: data.domain,
-  //     })
-  //     .eq("team_id", team?.team_id);
-  //   if (pserror) {
-  //     console.error("Submission ps error:", pserror);
-  //     return;
-  //   }
+    const { error: pserror } = await supabase
+      .from("teams")
+      .update({
+        problem_statement: data.problem_statement,
+        domain: data.domain,
+      })
+      .eq("team_id", team?.team_id);
+    if (pserror) {
+      console.error("Submission ps error:", pserror);
+      return;
+    }
 
-  //   if (team) {
-  //     setTeam({
-  //       ...team,
-  //       problem_statement: data.problem_statement,
-  //       domain: data.domain,
-  //     });
-  //   }
-  // }
+    if (team) {
+      setTeam({
+        ...team,
+        problem_statement: data.problem_statement,
+        domain: data.domain,
+      });
+    }
+  }
   // const onMidReviewSubmit = async (data: any) => {
   //   // try {
   //   const { error } = await supabase.auth.getUser();
@@ -620,9 +631,34 @@ const doPayment = async (order: Order): Promise<void> => {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <NavBar userName={userName} />
+    {popUp && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 pr-0 w-11/12 md:w-1/3">
+            <h2 className="text-xl font-semibold mb-4 text-black">Proceeding to payment.</h2>
+            <p className="mb-4 text-black">Please note that you will not be able to change the domain after payment.</p>
+            <div className="flex justify-end items-center">
+              <Button
+                className="relative text-white text-sm font-bold"
+                onClick={() => setPopUp(false)}
 
+              >
+                X
+              </Button>
+              <Button
+                className="relative text-white text-sm font-bold mx-10"
+                onClick={() => { setPopUp(false); handlePay(); }}
+              >
+                Proceed
+              </Button>
+            </div>
+
+          </div>
+
+        </div>
+      )}
       <div className="flex flex-col justify-between h-full flex-grow">
         <div className="flex-grow flex flex-col lg:flex-row-reverse lg:justify-between items-center lg:items-start px-4 md:px-6 pt-8">
+          <div className="flex-grow flex flex-col lg:flex-col  lg:justify-center lg:items-end md:items-center   ">
           <div
             className="lg:w-[40%] md:w-1/2 w-full"
             style={{
@@ -641,13 +677,55 @@ const doPayment = async (order: Order): Promise<void> => {
                 team.payment_status === "Failed") && paymentCount <= +import.meta.env.VITE_TEAM_CAP && isLead) && (
                   <Button
                     className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-100 transition duration-300 flex items-center justify-center gap-2"
-                    onClick={handlePay}
+                     onClick={() => setPopUp(true)}
+                     disabled={!(isLead && psform.watch("domain"))} 
                   >
                     <img src="/pay.svg" />
                   </Button>
                 )}
             </div>
           </div>
+          <Form {...psform}>
+                        <form
+          
+                          className="text-white  rounded-lg shadow-md lg:w-[40%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
+                        >
+          
+                          <FormField
+                            name="domain"
+                            render={({ field }) => (
+                              <FormItem className="lg:w-full">
+                                <FormLabel>Domain</FormLabel>
+                                <FormControl>
+                                  <Select
+                                    onValueChange={(val) => {
+                                      field.onChange(val);          
+                                      psform.handleSubmit(onSubmitps)(); 
+                                    }}
+                                    value={team.domain ? team.domain : field.value}
+                                    disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
+          
+                                  >
+                                    <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md w-[80vw] md:w-[40vw] lg:w-full">
+                                      <SelectValue placeholder={team.domain ? team.domain : "Select Domain"} />
+                                    </SelectTrigger>
+                                    <SelectContent className="w-[var(--radix-select-trigger-width)]">
+                                      {domains.map((domain) => (
+                                        <SelectItem key={domain.value} value={domain.value}>
+                                          {domain.label}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </FormControl>
+                                <FormMessage className="text-red-500" />
+                              </FormItem>
+                            )}
+                          />
+          
+                        </form>
+                      </Form>
+                    </div>
           <div className="flex">
             <div className="lg:w-[60%] h-full lg:pr-8 ">
               <div className="w-full h-full pt-3 mt-4 flex flex-col">
