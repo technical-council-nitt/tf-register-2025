@@ -670,7 +670,7 @@ const doPayment = async (order: Order): Promise<void> => {
         <div className="flex-grow flex flex-col lg:flex-row-reverse lg:justify-between items-center lg:items-start px-4 md:px-6 pt-8">
           <div className="flex-grow flex flex-col lg:flex-col  lg:justify-center lg:items-end md:items-center   ">
           <div
-            className="lg:w-[40%] md:w-1/2 w-full"
+            className="lg:w-[100%] md:w-1/2 w-full"
             style={{
               backgroundImage: `url('/team-card2.svg')`,
               backgroundSize: "cover",
@@ -698,7 +698,7 @@ const doPayment = async (order: Order): Promise<void> => {
           <Form {...psform}>
                         <form  onSubmit={psform.handleSubmit(onSubmitps)}
           
-                          className="text-white  rounded-lg shadow-md lg:w-[40%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
+                          className="text-white  rounded-lg shadow-md lg:w-[100%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
                         >
           
                           <FormField
