@@ -737,7 +737,7 @@ const doPayment = async (order: Order): Promise<void> => {
                       </Form>
                     </div>
           <div className="flex">
-            <div className="lg:w-[60%] h-full lg:pr-8 ">
+            <div className="lg:w-[100%] h-full lg:pr-8 ">
               <div className="w-full h-full pt-3 mt-4 flex flex-col">
                 <h1 className="font-spacegrotesk text-3xl lg:text-5xl font-medium">
                   Dashboard
