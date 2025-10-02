@@ -379,6 +379,7 @@ const doPayment = async (order: Order): Promise<void> => {
   };
 
   const onSubmitps = async (data: any) => {
+    console.log("called--------------------------------");
     const { error } = await supabase.auth.getUser();
     if (error) {
       console.error("Error fetching user details:", error);
