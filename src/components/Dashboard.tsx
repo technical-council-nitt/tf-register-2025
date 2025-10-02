@@ -103,7 +103,7 @@ const Dashboard = () => {
   // });
 
   const psschema = z.object({
-    problem_statement: z.string().nonempty("Problem Statement is required"),
+    problem_statement: z.string().optional(),
     domain: z.string().nonempty("Domain is required"),
   });
   //  const testUpload = async () => {
