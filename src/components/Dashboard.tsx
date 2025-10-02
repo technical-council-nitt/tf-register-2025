@@ -700,7 +700,7 @@ const doPayment = async (order: Order): Promise<void> => {
                                   <Select
                                     onValueChange={(val) => {
                                       field.onChange(val);          
-                                      psform.handleSubmit(onSubmitps)(); 
+                                      psform.handleSubmit(onSubmitps); 
                                     }}
                                     value={team.domain ? team.domain : field.value}
                                     disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
