@@ -80,6 +80,7 @@ interface Order {
 }
 
 const Dashboard = () => {
+ 
   const [popUp, setPopUp] = useState(false);
   const cashfreeRef = useRef<CashfreeInstance | null>(null);
   const { teamId } = useParams<{ teamId: string }>();
@@ -143,6 +144,14 @@ const Dashboard = () => {
       domain: "",
     }
   })
+   const domainValue=psform.watch('domain');
+   useEffect(()=>{
+    if(domainValue)
+    {
+      psform.handleSubmit(onSubmitps)();
+    }
+   },[domainValue])
+  
 
   useEffect(() => {
   if (team) {
@@ -701,7 +710,7 @@ const doPayment = async (order: Order): Promise<void> => {
                                   <Select
                                     onValueChange={(val) => {
                                       field.onChange(val);          
-                                      psform.handleSubmit(onSubmitps)(); 
+                                   
                                     }}
                                     value={team.domain ? team.domain : field.value}
                                     disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
