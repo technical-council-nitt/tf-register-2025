@@ -270,9 +270,9 @@ const Payment = () => {
         const fetchSuccessCount = async () => {
        
           const { count } = await supabase
-            .from('payments')
+            .from('teams')
             .select('*', { count: 'exact' })
-            .eq('status', 'SUCCESS');
+            .eq('payment_status', 'PAID');
             if(count!==null){
        
           setPaymentCount(count);
