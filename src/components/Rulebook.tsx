@@ -248,7 +248,7 @@ const Rulebook = () => {
                     <p className="text-2xl font-bold my-4">Terms & Conditions</p>
                     <p className="text-sm my-6">Last updated on October 3rd, 2025</p>
                     <p className="text-3xl my-6 font-bold">Introduction to Terms</p>
-                    <p className="text-sm my-6">These Terms and Conditions, along with the privacy policy or other terms, constitute a binding agreement between ADHITYA SRIRAM ("Website Owner", "we", "us", or "our") and you ("you", "your") and relate to your use of our website and services ("Services"). By using our website and availing of our Services, you agree that you have read and accepted these Terms, including the Privacy Policy.</p>
+                    <p className="text-sm my-6">These Terms and Conditions, along with the privacy policy or other terms, constitute a binding agreement between TransfiNITTe ("Website Owner", "we", "us", or "our") and you ("you", "your") and relate to your use of our website and services ("Services"). By using our website and availing of our Services, you agree that you have read and accepted these Terms, including the Privacy Policy.</p>
                     <p className="text-sm my-6">We reserve the right to modify these Terms at any time without assigning any reason. It is your responsibility to periodically review these Terms to stay informed of updates. Use of this website or our Services is subject to the following terms:
                         <ul className="list-disc ml-5">
                             <li>Provide true, accurate, and complete information during and after registration; you are responsible for all acts done through your registered account.</li>
@@ -273,9 +273,9 @@ const Rulebook = () => {
                     <p className="text-sm my-6">Last updated on October 3rd, 2025</p>
                     <p className="text-3xl font-bold my-6">Policy Overview</p>
                     <p className="text-sm my-6">TransfiNITTe believes in helping its customers as far as possible and has a liberal cancellation policy. Cancellations are considered only if requested immediately after placing the order. Cancellation requests may not be entertained if orders have been communicated to vendors/merchants and shipping initiated.</p>
-                    <p className="text-sm my-6">We do not accept cancellations for perishable items like flowers, eatables, etc. However, refund/replacement can be made if the product quality is not good, subject to verification.</p>
-                    <p className="text-sm my-6">Report damaged/defective items to Customer Service within 7 days of receipt. If products are not as shown on site or as per expectations, report within 7 days for review and action.</p>
-                    <p className="text-sm my-6">For products with manufacturer warranties, refer complaints to the manufacturer. Approved refunds will be processed within 3–5 days.</p>
+                    <p className="text-sm my-6">We only accept refund requests if approved by our representative on a prior notice not less than 2 days before the commencement of the event.</p>
+                    {/* <p className="text-sm my-6">Report damaged/defective items to Customer Service within 7 days of receipt. If products are not as shown on site or as per expectations, report within 7 days for review and action.</p>
+                    <p className="text-sm my-6">For products with manufacturer warranties, refer complaints to the manufacturer. Approved refunds will be processed within 3–5 days.</p> */}
                 </p>
             {/* </div> */}
                             <table className="table-auto border border-gray-400 w-full text-left mb-6">
