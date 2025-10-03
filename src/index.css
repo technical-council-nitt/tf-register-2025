@@ -116,3 +116,9 @@ body {
   scrollbar-width: thin; /* Width of the scrollbar */
   scrollbar-color: #ffffff #1a1a1a; /* Thumb color and track color */
 }
+.no-scrollbar::-webkit-scrollbar{
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}

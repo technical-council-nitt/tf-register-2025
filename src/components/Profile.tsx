@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,16 +20,60 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import WaterDropGrid from "./WaterDropGrid";
 import { supabase } from "@/utiils/supabase";
 
-// Lazy load the heavy 3D component
-const WaterDropGrid = lazy(() => import("./WaterDropGrid"));
 
 const genders = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
   { value: "other", label: "Others" },
 ];
+const mess = [
+  { value: "Mega Mess II GF", label: "Mega Mess II GF" },
+  { value: "Mega Mess II FF", label: "Mega Mess II FF" },
+  { value: "Mega Mess I GF", label: "Mega Mess I GF" },
+  { value: "Annapurna", label: "Annapurna" },
+  { value: "Sabari", label: "Sabari" },
+  { value: "Kailash", label: "Kailash" },
+  { value: "A-mess", label: "A-mess" },
+  { value: "Opal Mess GF", label: "Opal Mess GF" },
+  { value: "Opal Mess FF", label: "Opal Mess FF" },
+];
+const hostels = [
+  // Boys Hostels
+  { value: "Agate", label: "Agate" },
+  { value: "Garnet A", label: "Garnet A" },
+  { value: "Garnet B", label: "Garnet B" },
+  { value: "Garnet C", label: "Garnet C" },
+  { value: "Zircon A", label: "Zircon A" },
+  { value: "Zircon B", label: "Zircon B" },
+  { value: "Zircon C", label: "Zircon C" },
+  { value: "Beryl", label: "Beryl" },
+  { value: "Amber A", label: "Amber A" },
+  { value: "Amber B", label: "Amber B" },
+  { value: "Coral", label: "Coral" },
+  { value: "Aquamarine A", label: "Aquamarine A" },
+  { value: "Aquamarine B", label: "Aquamarine B" },
+  { value: "Ruby", label: "Ruby" },
+  { value: "Emerald", label: "Emerald" },
+  { value: "Pearl", label: "Pearl" },
+  { value: "Sapphire", label: "Sapphire" },
+  { value: "Topaz", label: "Topaz" },
+  { value: "Lapis", label: "Lapis" },
+  { value: "Diamond", label: "Diamond" },
+  { value: "Jade", label: "Jade" },
+  { value: "Jasper", label: "Jasper" },
+  { value: "Amethyst", label: "Amethyst" },
+  // Girls Hostels
+  { value: "Opal A", label: "Opal A" },
+  { value: "Opal B", label: "Opal B" },
+  { value: "Opal C", label: "Opal C" },
+  { value: "Opal D", label: "Opal D" },
+  { value: "Opal E", label: "Opal E" },
+  { value: "Opal F", label: "Opal F" },
+];
+
 
 type User = {
   name: string;
@@ -152,9 +196,7 @@ const Profile = () => {
       </nav>
       <div className="flex">
         <div className="bg-white w-full md:block hidden overflow-hidden">
-          <Suspense fallback={<div className="flex items-center justify-center h-screen bg-white"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div></div>}>
-            <WaterDropGrid />
-          </Suspense>
+          <WaterDropGrid />
         </div>
         <div className="flex flex-col w-full justify-center items-center min-h-screen bg-black p-4">
           <div className="flex self-start ml-4 mb-2 cursor-pointer">
@@ -163,7 +205,7 @@ const Profile = () => {
           </div>
           <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">Complete your Application</h1>
           <p className="md:text-xs mb-4 ml-4 text-left md:text-sm text-white">
-            Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our <a href="/rulebook" className="underline underline-offset-4">Rulebook</a>.
+            Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our <a href="/rulebook" className="underline underline-offset-4"> Privacy Policy</a>
           </p>
           <Form {...form}>
             <form
@@ -219,7 +261,21 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Hostel</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter your hostel name" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                          <SelectValue placeholder="Select Hostel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {hostels.map((hostel) => (
+                            <SelectItem key={hostel.value} value={hostel.value}>
+                              {hostel.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -233,7 +289,21 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Mess</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter your Mess name" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
+                          <SelectValue placeholder="Select Mess" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mess.map((mess) => (
+                            <SelectItem key={mess.value} value={mess.value}>
+                              {mess.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
