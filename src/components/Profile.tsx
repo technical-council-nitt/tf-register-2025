@@ -205,8 +205,7 @@ const Profile = () => {
           </div>
           <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">Complete your Application</h1>
           <p className="md:text-xs mb-4 ml-4 text-left md:text-sm text-white">
-            Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our <a> Privacy Policy</a>
-              {/*  className="underline underline-offset-4"*/}
+            Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our <a href="/rulebook" className="underline underline-offset-4"> Privacy Policy</a>
           </p>
           <Form {...form}>
             <form
