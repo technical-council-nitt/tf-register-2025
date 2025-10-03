@@ -242,7 +242,7 @@ const Rulebook = () => {
                 <img src="/motif-desk2.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
                 <img src="/register.svg" alt="Logo" style={{ width: '110px', aspectRatio: '96 / 20' }} />
             </nav>
-            <div className="flex self-start ml-4 cursor-pointer my-4 justify-center items-center">
+            {/* <div className="flex self-start ml-4 cursor-pointer my-4 justify-center items-center"> */}
                 {/* Terms & Conditions Section */}
                 <p>
                     <p className="text-2xl font-bold my-4">Terms & Conditions</p>
@@ -277,7 +277,7 @@ const Rulebook = () => {
                     <p className="text-sm my-6">Report damaged/defective items to Customer Service within 7 days of receipt. If products are not as shown on site or as per expectations, report within 7 days for review and action.</p>
                     <p className="text-sm my-6">For products with manufacturer warranties, refer complaints to the manufacturer. Approved refunds will be processed within 3–5 days.</p>
                 </p>
-            </div>
+            {/* </div> */}
                             <table className="table-auto border border-gray-400 w-full text-left mb-6">
                       <thead>
                       
