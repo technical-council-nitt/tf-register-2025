@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { ArrowUpRight } from "lucide-react";
 import {
@@ -11,8 +11,40 @@ import NavBar from "./Navbar";
 import { toast } from "sonner";
 
 const JoinTeam = () => {
+    const [centeredIndex, setCenteredIndex] = useState<number | null>(null);
+    const [click, setClick] = useState<boolean>(false);
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [teamCode, setTeamCode] = useState<string>("");
     const [userName, setUsername] = useState<string | undefined>(undefined);
+    const [popUp, setPopUp] = useState<boolean>(false);
+    const [publicTeams, setPublicTeams] = useState<Array<{ team_id: string, team_name: string, contact: string , domain: string }>>([]);
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            const containerCenter = container.getBoundingClientRect().left + container.offsetWidth / 2;
+            let minDistance = Infinity;
+            let newCenteredIndex = 0;
+
+            Array.from(container.children).forEach((child, index) => {
+                if (child instanceof HTMLElement) {
+                    const childCenter = child.getBoundingClientRect().left + child.offsetWidth / 2;
+                    const distance = Math.abs(containerCenter - childCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        newCenteredIndex = index;
+                    }
+                }
+            });
+            setCenteredIndex(newCenteredIndex);
+        };
+
+        handleScroll();
+        container.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => container.removeEventListener('scroll', handleScroll);
+    }, [publicTeams, click]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -35,6 +67,23 @@ const JoinTeam = () => {
                     return;
                 }
                 setUsername(userData?.name);
+                
+                const { data: publicTeamsData, error: publicTeamsError } = await supabase
+                    .from("teams")
+                    .select("team_id, name, contact, domain")
+                    .eq("ispublic", true);
+                
+                if (publicTeamsError) {
+                    console.error("Error fetching public teams:", publicTeamsError);
+                } else {
+                    const formattedTeams = publicTeamsData.map(team => ({
+                        team_id: team.team_id,
+                        team_name: team.name,
+                        contact: team.contact,
+                        domain: team.domain
+                    }));
+                    setPublicTeams(formattedTeams);
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -126,11 +175,49 @@ const JoinTeam = () => {
         <div className="flex flex-col min-h-screen bg-black text-white">
             <NavBar userName={userName} />
 
+
             <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
-                <div className="w-full max-w-md space-y-6 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
+                 {popUp && (<>
+            <div className="backdrop-blur-md fixed inset-0 bg-black bg-opacity-50 z-50" />
+            <div className=" backdrop-blur-none fixed inset-0 flex items-center justify-center z-50">
+                <div className="backdrop-blur-none p-6 rounded-lg shadow-lg flex flex-col items-center">
+                    <h3 className="text-xl font-bold mb-4">Join a Public Team</h3>
+                    {publicTeams.length > 0 ? (
+                        <div ref={scrollContainerRef} className="flex space-x-4 overflow-x-auto no-scrollbar snap-x snap-mandatory w-[90vw] px-8">
+                            {publicTeams.map((team, index) => (
+                                <div
+                                    key={team.team_id}
+                                    className={`min-w-[300px] no-scrollbar md:min-w-[400px] flex-shrink-0 rounded-lg shadow-md snap-center transition-transform duration-300 ease-in-out
+                                    ${centeredIndex === index ? "scale-115 z-10" : "scale-90 opacity-80 z-10"}`}
+                                    style={{
+                                        backgroundImage: `url('/team-card2.svg')`,
+                                        backgroundSize: "cover",
+                                        backgroundRepeat: "no-repeat",
+                                        aspectRatio: "343 / 216",
+                                    }}
+                                >
+                                    <p className="left-5 relative z-50 top-[65%] text-gray-300">{team.team_name}</p>
+                                    <p className="left-5 relative z-50 top-[65%] text-gray-300">{team.contact}</p>
+                                    <p className="text-right relative z-60 right-6 top-[55%] text-gray-300">{team.domain}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No public teams available at the moment.</p>
+                    )}
+                    <Button
+                        className="mt-4 w-40  bg-white text-black font-bold py-2 rounded-lg"
+                        onClick={() => setPopUp(false)}
+                    >
+                        Close
+                    </Button>
+                </div>
+            </div>
+        </>)} <div className="w-full max-w-md space-y-6 bg-[#1a1a1a] p-8 rounded-lg shadow-lg">
                     <h2 className="text-3xl md:text-4xl font-bold text-center">
                         Join Team
                     </h2>
+
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <label
@@ -153,7 +240,7 @@ const JoinTeam = () => {
                                                 <InputOTPSlot
                                                     key={index}
                                                     index={index}
-                                                    className="bg-[#2a2a2a] border border-gray-600 text-white w-12 h-12 text-center rounded-lg text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="bg-[#2a2a2a] border border-gray-600 text-white md:w-12 md:h-12 text-center rounded-lg text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                 />
                                             )
                                         )}
@@ -168,6 +255,7 @@ const JoinTeam = () => {
                             <span>Join Team</span>
                             <ArrowUpRight className="h-5 w-5" />
                         </Button>
+                        <p className="text-sm">Don't have a team? <span onClick={() => { setPopUp(true); setClick(!click); }} className="underline underline-offset-4 cursor-pointer">Join a public team!</span></p>
                     </form>
                 </div>
             </main>
