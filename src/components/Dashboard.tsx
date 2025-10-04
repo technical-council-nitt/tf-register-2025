@@ -12,7 +12,7 @@ import { Copy, Loader2 } from "lucide-react";
 import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
 import { IoExitOutline } from "react-icons/io5";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaGlobe, FaLock, FaRegTrashAlt } from "react-icons/fa";
 import {
   Form,
   FormItem,
@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
+
 //import { set } from "animejs";
 // import { timeStamp } from "console";
 // const problem_statements = [
@@ -72,6 +73,7 @@ type Team = {
   leader_user_id: string;
   problem_statement: string;
   domain: string;
+  ispublic: boolean;
 };
 
 interface Order {
@@ -80,7 +82,7 @@ interface Order {
 }
 
 const Dashboard = () => {
- 
+  const [click, setClick] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const cashfreeRef = useRef<CashfreeInstance | null>(null);
   const { teamId } = useParams<{ teamId: string }>();
@@ -93,11 +95,11 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
   // const schema = z.object({
-    // teamName: z.string().min(1, "Name is required"),
-    // rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
-    // personalEmail: z.string().email("Invalid email address"),
-    // hostel: z.string().nonempty("Hostel is required"),
-    // gender: z.string().nonempty("Gender is required"),
+  // teamName: z.string().min(1, "Name is required"),
+  // rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
+  // personalEmail: z.string().email("Invalid email address"),
+  // hostel: z.string().nonempty("Hostel is required"),
+  // gender: z.string().nonempty("Gender is required"),
   //   timeStamp: z.string(),
   //   file: z.any().refine((fileList) => fileList && fileList.length === 1, "File is required"),
   // });
@@ -137,6 +139,33 @@ const Dashboard = () => {
   //   },
   // });
 
+  const handleMakePublic = async () => {
+    setClick(true);
+
+    if (!team) return;
+    const { error } = await supabase
+      .from("teams")
+      .update({ ispublic: true })
+      .eq("team_id", team.team_id);
+    if (error) {
+      console.error("Error making team public:", error);
+      return;
+    }
+    setTeam((prev) => (prev ? { ...prev, ispublic: true } : null));
+  };
+  const handleMakePrivate = async () => {
+    setClick(true);
+    if (!team) return;
+    const { error } = await supabase
+      .from("teams")
+      .update({ ispublic: false })
+      .eq("team_id", team.team_id);
+    if (error) {
+      console.error("Error making team private:", error);
+      return;
+    }
+    setTeam((prev) => (prev ? { ...prev, ispublic: false } : null));
+  };
   const psform = useForm({
     resolver: zodResolver(psschema),
     defaultValues: {
@@ -144,23 +173,23 @@ const Dashboard = () => {
       domain: "",
     }
   })
-   const domainValue=psform.watch('domain');
-   useEffect(()=>{
-    if(domainValue)
-    {
+
+  const domainValue = psform.watch('domain');
+  useEffect(() => {
+    if (domainValue) {
       psform.handleSubmit(onSubmitps)();
     }
-   },[domainValue])
-  
+  }, [domainValue])
+
 
   useEffect(() => {
-  if (team) {
-    psform.reset({
-      problem_statement: team.problem_statement || "",
-      domain: team.domain || "",
-    });
-  }
-}, [team]);
+    if (team) {
+      psform.reset({
+        problem_statement: team.problem_statement || "",
+        domain: team.domain || "",
+      });
+    }
+  }, [team]);
 
 
   useEffect(() => {
@@ -223,7 +252,7 @@ const Dashboard = () => {
       }
       // await testUpload();
     };
-    
+
     const fetchPaymentStatus = async () => {
       const { data: paymentData, error: paymentError } = await supabase
         .from("teams")
@@ -238,135 +267,136 @@ const Dashboard = () => {
 
       return { paymentData };
     }
-    
+
     fetchDetails();
     fetchPaymentStatus();
   }, [teamId]);
 
   const init = async (): Promise<Order | undefined> => {
-  try {
-    // Initialize Cashfree SDK
-    console.log("Initializing Cashfree SDK...");
-    cashfreeRef.current = await load({ mode: "production" });
-    console.log("Cashfree SDK initialized successfully");
+    try {
+      // Initialize Cashfree SDK
+      console.log("Initializing Cashfree SDK...");
+      cashfreeRef.current = await load({ mode: "production" });
+      console.log("Cashfree SDK initialized successfully");
 
-    // Call your backend to create order
-    const backendUrl = `${import.meta.env.VITE_PROD_URL_BACKEND}/api/checkout`;
-    console.log("Calling backend API:", backendUrl);
-    console.log("Environment variable VITE_PROD_URL_BACKEND:", import.meta.env.VITE_PROD_URL_BACKEND);
-    
-    const requestBody = {
-      userId: teamId,
-      teamName: "team-name", 
-      teamId: teamId,
-    };
-    console.log("Request body:", requestBody);
-    
-    const res = await fetch(backendUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
+      // Call your backend to create order
+      const backendUrl = `${import.meta.env.VITE_PROD_URL_BACKEND}/api/checkout`;
+      console.log("Calling backend API:", backendUrl);
+      console.log("Environment variable VITE_PROD_URL_BACKEND:", import.meta.env.VITE_PROD_URL_BACKEND);
 
-    console.log("Backend API response status:", res.status);
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    
-    const data: Order = await res.json();
-    console.log("Backend API response data:", data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching order:", error);
-    throw error; // Re-throw to see the full error
-  }
-};
-const Payment = () => {
-    
-     
-    
-      useEffect(() => {
-        const fetchSuccessCount = async () => {
-       
-          const { count } = await supabase
-            .from('teams')
-            .select('*', { count: 'exact' })
-            .eq('payment_status', 'PAID');
-            if(count!==null){
-       
-          setPaymentCount(count);
-          console.log('Number of successful payments:', count+50);
-        
+      const requestBody = {
+        userId: teamId,
+        teamName: "team-name",
+        teamId: teamId,
+      };
+      console.log("Request body:", requestBody);
+
+      const res = await fetch(backendUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      console.log("Backend API response status:", res.status);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
-    };
-        fetchSuccessCount();
-      }, []);}
-      Payment();
 
-const handlePay = async (): Promise<void> => {
-  console.log("Handle pay called");
-  console.log("Team members count:", team?.members?.length);
-  console.log("Team data:", team);
-      
+      const data: Order = await res.json();
+      console.log("Backend API response data:", data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      throw error; // Re-throw to see the full error
+    }
+  };
+  const Payment = () => {
 
-  if (team?.members.length && team.members.length < 4) {
-    console.log("❌ Payment blocked: Team has less than 4 members");
-    toast("Whoops!", {
-      description: "You need at least 4 members in your team to submit payment.",
-    });
-    return;
+
+
+    useEffect(() => {
+      const fetchSuccessCount = async () => {
+
+        const { count } = await supabase
+          .from('teams')
+          .select('*', { count: 'exact' })
+          .eq('payment_status', 'PAID');
+        if (count !== null) {
+
+          setPaymentCount(count);
+          console.log('Number of successful payments:', count + 50);
+
+        }
+      };
+      fetchSuccessCount();
+    }, []);
   }
+  Payment();
 
-  console.log("✅ Team has enough members, proceeding with payment...");
-  const fetchedOrder = await init();
-  if (fetchedOrder) {
-    await doPayment(fetchedOrder);
-  } else {
-    console.error("❌ Failed to fetch order from backend");
-  }
-};
+  const handlePay = async (): Promise<void> => {
+    console.log("Handle pay called");
+    console.log("Team members count:", team?.members?.length);
+    console.log("Team data:", team);
 
-const doPayment = async (order: Order): Promise<void> => {
-  if (!cashfreeRef.current) {
-    console.error("Cashfree SDK not initialized yet");
-    return;
-  }
 
-  if (!order.payment_session_id) {
-    console.error("Order not ready yet");
-    return;
-  }
+    if (team?.members.length && team.members.length < 4) {
+      console.log("❌ Payment blocked: Team has less than 4 members");
+      toast("Whoops!", {
+        description: "You need at least 4 members in your team to submit payment.",
+      });
+      return;
+    }
 
-  const checkoutOptions = {
-    paymentSessionId: order.payment_session_id,
-    redirect: true,
-    appearance: {
-      width: "425px",
-      height: "700px",
-    },
+    console.log("✅ Team has enough members, proceeding with payment...");
+    const fetchedOrder = await init();
+    if (fetchedOrder) {
+      await doPayment(fetchedOrder);
+    } else {
+      console.error("❌ Failed to fetch order from backend");
+    }
   };
 
-  try {
-    const result = await cashfreeRef.current.checkout(checkoutOptions);
-
-    if (result.error) {
-      console.error("Payment error:", result.error);
+  const doPayment = async (order: Order): Promise<void> => {
+    if (!cashfreeRef.current) {
+      console.error("Cashfree SDK not initialized yet");
+      return;
     }
 
-    if (result.redirect) {
-      console.log("Payment will be redirected");
+    if (!order.payment_session_id) {
+      console.error("Order not ready yet");
+      return;
     }
 
-    if (result.paymentDetails) {
-      console.log("Payment completed:", result.paymentDetails);
-      console.log(order);
-      console.log("Payment completed:", result.paymentDetails.paymentMessage);
+    const checkoutOptions = {
+      paymentSessionId: order.payment_session_id,
+      redirect: true,
+      appearance: {
+        width: "425px",
+        height: "700px",
+      },
+    };
+
+    try {
+      const result = await cashfreeRef.current.checkout(checkoutOptions);
+
+      if (result.error) {
+        console.error("Payment error:", result.error);
+      }
+
+      if (result.redirect) {
+        console.log("Payment will be redirected");
+      }
+
+      if (result.paymentDetails) {
+        console.log("Payment completed:", result.paymentDetails);
+        console.log(order);
+        console.log("Payment completed:", result.paymentDetails.paymentMessage);
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
     }
-  } catch (error) {
-    console.error("Checkout failed:", error);
-  }
-};
+  };
   const generate_team_id = async () => {
     let teamId;
     let isUnique = false;
@@ -641,7 +671,7 @@ const doPayment = async (order: Order): Promise<void> => {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <NavBar userName={userName} />
-    {popUp && (
+      {popUp && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 pr-0 w-11/12 md:w-1/3">
             <h2 className="text-xl font-semibold mb-4 text-black">Proceeding to payment.</h2>
@@ -669,73 +699,73 @@ const doPayment = async (order: Order): Promise<void> => {
       <div className="flex flex-col justify-between h-full flex-grow">
         <div className="flex-grow flex flex-col lg:flex-row-reverse lg:justify-between items-center lg:items-start px-4 md:px-6 pt-8">
           <div className="flex-grow flex flex-col lg:flex-col  lg:justify-center lg:items-end md:items-center   ">
-          <div
-            className="lg:w-[100%] md:w-1/2 w-full"
-            style={{
-              backgroundImage: `url('/team-card2.svg')`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              aspectRatio: "343 / 216",
-              position: "relative",
-            }}
-          >
-            <h2 className="text-[1.4em] font-semibold absolute bottom-0 left-0 p-[1em] md:p-[1.6em]">
-              {team.name}
-            </h2>
-            <div className="absolute bottom-0 right-0 p-6 pb-4">
-              {((team.payment_status === "Pending" ||
-                team.payment_status === "Failed") && paymentCount <= +import.meta.env.VITE_TEAM_CAP && isLead) && (
-                  <Button
-                    className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-100 transition duration-300 flex items-center justify-center gap-2"
-                     onClick={() => setPopUp(true)}
-                     disabled={!(isLead && psform.watch("domain"))} 
-                  >
-                    <img src="/pay.svg" />
-                  </Button>
-                )}
+            <div
+              className="lg:w-[100%] md:w-1/2 w-full"
+              style={{
+                backgroundImage: `url('/team-card2.svg')`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                aspectRatio: "343 / 216",
+                position: "relative",
+              }}
+            >
+              <h2 className="text-[1.4em] font-semibold absolute bottom-0 left-0 p-[1em] md:p-[1.6em]">
+                {team.name}
+              </h2>
+              <div className="absolute bottom-0 right-0 p-6 pb-4">
+                {((team.payment_status === "Pending" ||
+                  team.payment_status === "Failed") && paymentCount <= +import.meta.env.VITE_TEAM_CAP && isLead) && (
+                    <Button
+                      className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-100 transition duration-300 flex items-center justify-center gap-2"
+                      onClick={() => setPopUp(true)}
+                      disabled={!(isLead && psform.watch("domain"))}
+                    >
+                      <img src="/pay.svg" />
+                    </Button>
+                  )}
+              </div>
             </div>
-          </div>
-          <Form {...psform}>
-                        <form  onSubmit={psform.handleSubmit(onSubmitps)}
-          
-                          className="text-white  rounded-lg shadow-md lg:w-[100%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
+            <Form {...psform}>
+              <form onSubmit={psform.handleSubmit(onSubmitps)}
+
+                className="text-white  rounded-lg shadow-md lg:w-[100%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
+              >
+
+                <FormField
+                  name="domain"
+                  render={({ field }) => (
+                    <FormItem className="lg:w-full">
+                      <FormLabel>Domain</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(val) => {
+                            field.onChange(val);
+
+                          }}
+                          value={field.value}
+                          disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
+
                         >
-          
-                          <FormField
-                            name="domain"
-                            render={({ field }) => (
-                              <FormItem className="lg:w-full">
-                                <FormLabel>Domain</FormLabel>
-                                <FormControl>
-                                  <Select
-                                    onValueChange={(val) => {
-                                      field.onChange(val);          
-                                   
-                                    }}
-                                    value={field.value}
-                                    disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
-          
-                                  >
-                                    <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md w-[80vw] md:w-[40vw] lg:w-full">
-                                      <SelectValue placeholder={team.domain ? team.domain : "Select Domain"} />
-                                    </SelectTrigger>
-                                    <SelectContent className="w-[var(--radix-select-trigger-width)]">
-                                      {domains.map((domain) => (
-                                        <SelectItem key={domain.value} value={domain.value}>
-                                          {domain.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormControl>
-                                <FormMessage className="text-red-500" />
-                              </FormItem>
-                            )}
-                          />
-          
-                        </form>
-                      </Form>
-                    </div>
+                          <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md w-[80vw] md:w-[40vw] lg:w-full">
+                            <SelectValue placeholder={team.domain ? team.domain : "Select Domain"} />
+                          </SelectTrigger>
+                          <SelectContent className="w-[var(--radix-select-trigger-width)]">
+                            {domains.map((domain) => (
+                              <SelectItem key={domain.value} value={domain.value}>
+                                {domain.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+
+              </form>
+            </Form>
+          </div>
           <div className="flex">
             <div className="lg:w-[100%] h-full lg:pr-8 ">
               <div className="w-full h-full pt-3 mt-4 flex flex-col">
@@ -791,15 +821,87 @@ const doPayment = async (order: Order): Promise<void> => {
                               </DialogDescription>
                             </DialogHeader>
                             <DialogFooter>
-                              <Button type="submit" onClick={handleDiscardTeam}>Confirm</Button>
+                              <Button type="submit" onClick={handleDiscardTeam} disabled={team.payment_status === "PAID"}>Confirm</Button>
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>
                         :
-                        <Button variant="outline" className="m-5 text-black hover:bg-neutral-400" onClick={handleLeaveTeam}>
+                        <Button variant="outline" className="m-5 text-black hover:bg-neutral-400" disabled={team.payment_status === "PAID"} onClick={handleLeaveTeam}>
                           Leave Team <IoExitOutline className="text-xl ml-2" />
                         </Button>
                       }
+                      {isLead && team.payment_status !== "PAID" && (
+  <>
+    {team.ispublic ? (
+      <Button
+        variant="outline"
+        className="m-5 text-black hover:bg-neutral-400"
+        onClick={() => setClick(true)}
+      >
+        Make Team Private <FaLock className="text-[16px] ml-2" />
+      </Button>
+    ) : (
+      <Button
+        variant="outline"
+        className="m-5 text-black hover:bg-neutral-400"
+        onClick={() => setClick(true)}
+      >
+        Make Team Public <FaGlobe className="text-[16px] ml-2" />
+      </Button>
+    )}
+
+  
+    {click && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white dark:bg-neutral-900 p-6 rounded-lg shadow-lg w-[400px]">
+          <h2 className=" text-black font-bold mb-2 text-xl">
+            {team.ispublic ? "Make Team Private" : "Make Team Public"}
+          </h2>
+          <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+            {team.ispublic
+              ? "Making this team private will hide its details from the public team list. Are you sure you want to make this team private?"
+              : "Making this team public will show its details on the public team list. Are you sure you want to make this team public?"}
+          </p>
+
+          <div className="flex justify-end space-x-3">
+            <Button
+              variant="outline"
+              className="text-black hover:bg-neutral-200 dark:hover:bg-neutral-700"
+              onClick={() => setClick(false)}
+            >
+              Cancel
+            </Button>
+
+            {team.ispublic ? (
+              <Button
+                variant="default"
+                className="bg-black hover:bg-neutral-700 text-white"
+                onClick={() => {
+                  handleMakePrivate();
+                  setClick(false); 
+                }}
+              >
+                Confirm
+              </Button>
+            ) : (
+              <Button
+                variant="default"
+                className="bg-black hover:bg-neutral-700 text-white"
+                onClick={() => {
+                  handleMakePublic();
+                  setClick(false);
+                }}
+                disabled={team.payment_status === "PAID"}
+              >
+                Confirm
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
+  </>
+)}
                     </div>
                   </div>
                 </div>
@@ -843,7 +945,7 @@ const doPayment = async (order: Order): Promise<void> => {
           onSubmit={psform.handleSubmit(onSubmitps)}
           className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
         > */}
-          {/* <FormField
+      {/* <FormField
             name="domain"
             render={({ field }) => (
               <FormItem>
@@ -869,7 +971,7 @@ const doPayment = async (order: Order): Promise<void> => {
               </FormItem>
             )}
           /> */}
-          {/* <FormField
+      {/* <FormField
             name="problem_statement"
             render={({ field }) => (
               <FormItem>
@@ -929,7 +1031,7 @@ const doPayment = async (order: Order): Promise<void> => {
       </Form> */}
 
       {/* <Form {...form}> */}
-        {/* <form
+      {/* <form
           onSubmit={form.handleSubmit(onFinalReviewSubmit)}
           className="text-white p-6 rounded-lg shadow-md w-full space-y-2 mt-6"
         >
