@@ -190,7 +190,7 @@ const JoinTeam = () => {
                                 {domains.map((domain) => (
                                     <span
                                         key={domain}
-                                        className="px-3 py-1 bg-white text-black rounded-full text-[9px]  md:text-sm hover:scale-105 transition-transform duration-200 cursor-pointer"
+                                        className="px-2 py-1 bg-white text-black rounded-full text-[9px]  md:text-sm hover:scale-105 transition-transform duration-200 cursor-pointer"
                                         onClick={() =>
                                             setPublicTeams(
                                                 allTeams.filter(team => team.domain?.trim().toLowerCase() === domain.trim().toLowerCase())
@@ -200,7 +200,7 @@ const JoinTeam = () => {
                                         {domain.charAt(0).toUpperCase() + domain.slice(1)}
                                     </span>
                                 ))}    <span
-                                    className="px-3 py-1 bg-white text-black rounded-full text-[9px]  md:text-sm cursor-pointer"
+                                    className="px-2 py-1 bg-white text-black rounded-full text-[9px]  md:text-sm cursor-pointer"
                                     onClick={() => setPublicTeams(allTeams)}
                                 >
                                     All
