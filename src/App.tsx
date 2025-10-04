@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import JoinTeam from "./components/JoinTeam";
 import Payment from "./components/Payment";
 import Rulebook from "./components/Rulebook";
+import Rsvp from "./components/Rsvp";
 
 export default function App() {
     return (
@@ -21,6 +22,7 @@ export default function App() {
                     <Route path="/team/:teamId" element={<Dashboard />}></Route>
                     <Route path="/:teamId/pay" element={<Payment />} />
                     <Route path="/rulebook" element={<Rulebook />} />
+                     <Route path="/rsvp" element={<Rsvp />} />
                 </Routes>
             </Router>
         </div>
