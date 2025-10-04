@@ -45,17 +45,25 @@ const Rsvp = () => {
             setHasRollNumber(!!userData?.roll_number);
             if (!userData?.roll_number) {
                 window.location.href = "/profile";
+                return;
             }
-            setLoading(false);
+            
+            // Fetch team data if user has a team
+            if (userData?.team_id) {
+                await fetchTeamData(userData.team_id);
+            } else {
+                setLoading(false);
+            }
         };
-        const fetchTeamData = async () => {
+        
+        const fetchTeamData = async (currentTeamId: string) => {
             const {
-                data: { team },
+                data: team,
                 error: teamError,
             } = await supabase
                 .from("teams")
                 .select("*")
-                .eq("team_id", teamId)
+                .eq("team_id", currentTeamId)
                 .single();
             if (teamError) {
                 console.error(teamError);
@@ -63,16 +71,13 @@ const Rsvp = () => {
                 return;
             }
             console.log(team.payment_status);
-           if(team.payment_status==="PAID") {
-
-            setPaymentStatus(1);}
-            
-            
+            if(team.payment_status==="PAID") {
+                setPaymentStatus(1);
+            }
             setLoading(false);
         };
 
         fetchUser();
-        fetchTeamData();
     }, []);
 
     if (loading) {
