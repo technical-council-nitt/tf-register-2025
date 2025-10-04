@@ -62,7 +62,9 @@ const Rsvp = () => {
                 setLoading(false);
                 return;
             }
+            console.log(team.payment_status);
            if(team.payment_status==="PAID") {
+
             setPaymentStatus(1);}
             
             
