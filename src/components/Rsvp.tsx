@@ -62,7 +62,7 @@ const Rsvp = () => {
                 setLoading(false);
                 return;
             }
-           if(team.payment_status==="SUCCESS") {
+           if(team.payment_status==="PAID") {
             setPaymentStatus(1);}
             
             
@@ -110,6 +110,13 @@ Click on this downloaded link if the file doesn't start downloading automaticall
                             <p className="text-sm md:text-base">
                               Complete your team registration to claim it. Share it on your socials to win prizes.
                             </p>
+                            <Button
+                            className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
+                            onClick={() => (window.location.href = "/team/"+teamId)}
+                        >
+                            <span>Dashboard</span>
+                            <ArrowUpRight className="h-5 w-5" />
+                        </Button>
                         </>
                     )}
                     </div>)}
