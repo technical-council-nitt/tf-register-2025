@@ -18,7 +18,7 @@ const Rsvp = () => {
   const [teamId, setTeamId] = useState<string | undefined>(undefined);
   const [downloadStatus, setDownloadStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [hasRollNumber, setHasRollNumber] = useState(false);
+  // const [hasRollNumber, setHasRollNumber] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(0);
 
   // A ref to ensure the download action is a one-time event.
@@ -55,7 +55,7 @@ const Rsvp = () => {
       setUsername(userData?.name);
       setIsPartofTeam(!!userData?.team_id);
       setTeamId(userData?.team_id);
-      setHasRollNumber(!!userData?.roll_number);
+      // setHasRollNumber(!!userData?.roll_number);
 
       if (!userData?.roll_number) {
         window.location.href = "/profile";
