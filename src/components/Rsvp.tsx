@@ -120,7 +120,7 @@ const Rsvp = () => {
               }
             } else {
               setDownloadStatus(
-                "Your file is begin processed.",
+                "Your file is being processed.",
               );
             }
           } catch (e) {
