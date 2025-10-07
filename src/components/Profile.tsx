@@ -23,7 +23,6 @@ import { Loader2 } from "lucide-react";
 import WaterDropGrid from "./WaterDropGrid";
 import { supabase } from "@/utiils/supabase";
 
-
 const genders = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
@@ -74,7 +73,6 @@ const hostels = [
   { value: "Opal F", label: "Opal F" },
 ];
 
-
 type User = {
   name: string;
   personalEmail: string;
@@ -88,7 +86,10 @@ type User = {
 
 const schema = z.object({
   name: z.string().min(1, "Full Name is required"),
-  rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
+  rollNumber: z
+    .string()
+    .length(9, "Roll Number must be exactly 9 digits")
+    .regex(/^\d+$/, "Roll Number must contain only digits"),
   personalEmail: z.string().email("Invalid email address"),
   hostel: z.string().nonempty("Hostel is required"),
   gender: z.string().nonempty("Gender is required"),
@@ -116,19 +117,22 @@ const Profile = () => {
       try {
         const {
           data: { user },
-          error
+          error,
         } = await supabase.auth.getUser();
 
-        if(error) {
+        if (error) {
           console.error("Error fetching user details:", error);
           window.location.href = "/login";
           return;
-
         }
 
-        const { data: userData } = await supabase.from("users").select("*").eq("user_id", user?.id).single();
+        const { data: userData } = await supabase
+          .from("users")
+          .select("*")
+          .eq("user_id", user?.id)
+          .single();
 
-        if(userData) {
+        if (userData) {
           setUserDetails(userData);
           form.reset({
             name: userData?.name || "",
@@ -151,23 +155,29 @@ const Profile = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if(error) {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (error) {
         console.error("Error fetching user details:", error);
         return;
       }
 
-      const { error: upsertError } = await supabase.from("users").update({
-        user_id: user?.id,
-        name: data.name,
-        roll_number: data.rollNumber,
-        email: data.personalEmail,
-        hostel: data.hostel,
-        mess: data.mess,
-        gender: data.gender,
-      }).eq("user_id", user?.id);
+      const { error: upsertError } = await supabase
+        .from("users")
+        .update({
+          user_id: user?.id,
+          name: data.name,
+          roll_number: data.rollNumber,
+          email: data.personalEmail,
+          hostel: data.hostel,
+          mess: data.mess,
+          gender: data.gender,
+        })
+        .eq("user_id", user?.id);
 
-      if(upsertError) {
+      if (upsertError) {
         console.error("Error updating user details:", upsertError);
         return;
       }
@@ -190,9 +200,29 @@ const Profile = () => {
   return (
     <>
       <nav className="flex justify-between bg-black items-center p-[15px] md:p-4 border-b-[1px] border-neutral-800">
-        <img src="/motif2.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
-        <img src="/motif-desk2.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
-        <img src="/register.svg" alt="Logo" style={{ width: '110px', aspectRatio: '96 / 20' }} />
+        <a
+          href="https://transfinitte.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="/motif2.svg"
+            alt="Logo"
+            style={{ width: "40px", aspectRatio: "63 / 29" }}
+            className="md:hidden block"
+          />
+          <img
+            src="/motif-desk2.svg"
+            alt="Logo"
+            style={{ width: "120px", aspectRatio: "155 / 20" }}
+            className="md:block hidden"
+          />
+        </a>
+        <img
+          src="/register.svg"
+          alt="Logo"
+          style={{ width: "110px", aspectRatio: "96 / 20" }}
+        />
       </nav>
       <div className="flex">
         <div className="bg-white w-full md:block hidden overflow-hidden">
@@ -200,12 +230,28 @@ const Profile = () => {
         </div>
         <div className="flex flex-col w-full justify-center items-center min-h-screen bg-black p-4">
           <div className="flex self-start ml-4 mb-2 cursor-pointer">
-            <img src="/left-arrow.svg" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
-            <a href="/" className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s]">GO BACK</a>
+            <img
+              src="/left-arrow.svg"
+              alt="Logo"
+              style={{ width: "15px", aspectRatio: "13 / 10" }}
+            />
+            <a
+              href="/"
+              className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s]"
+            >
+              GO BACK
+            </a>
           </div>
-          <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">Complete your Application</h1>
+          <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">
+            Complete your Application
+          </h1>
           <p className="md:text-xs mb-4 ml-4 text-left md:text-sm text-white">
-            Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our <a href="/rulebook" className="underline underline-offset-4"> Privacy Policy</a>
+            Please enter your details to attend TransfiNITTe 2025 Hackathon. By
+            entering your information, you acknowledge you have read our{" "}
+            <a href="/rulebook" className="underline underline-offset-4">
+              {" "}
+              Privacy Policy
+            </a>
           </p>
           <Form {...form}>
             <form
@@ -219,7 +265,12 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Full Name" {...field} className="bg-[#1a1a1a] border border-gray-600 mt-0 rounded-md p-2" />
+                      <Input
+                        type="text"
+                        placeholder="Full Name"
+                        {...field}
+                        className="bg-[#1a1a1a] border border-gray-600 mt-0 rounded-md p-2"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -233,7 +284,12 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Roll Number</FormLabel>
                     <FormControl>
-                      <Input type="text" placeholder="Enter Roll Number" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                      <Input
+                        type="text"
+                        placeholder="Enter Roll Number"
+                        {...field}
+                        className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -247,7 +303,13 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Personal Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" disabled />
+                      <Input
+                        type="email"
+                        placeholder="Enter your personal email"
+                        {...field}
+                        className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2"
+                        disabled
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -338,7 +400,10 @@ const Profile = () => {
                 )}
               />
               <div className="w-full flex md:flex-row-reverse">
-                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
+                <Button
+                  type="submit"
+                  className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300"
+                >
                   Proceed
                 </Button>
               </div>

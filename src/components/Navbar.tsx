@@ -1,76 +1,84 @@
 import { supabase } from "@/utiils/supabase";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "./ui/dropdown-menu";
 import {
-    Tooltip,
-    TooltipProvider,
-    TooltipTrigger,
-} from "./ui/tooltip";
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from "./ui/dropdown-menu";
+import { Tooltip, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import React from "react";
 
 type NavBarProps = {
-    userName?: string;
+  userName?: string;
 };
 
 const NavBar: React.FC<NavBarProps> = ({ userName }) => {
+  const handleOptionClick = async (option: string) => {
+    if (option === "Profile") {
+      window.location.href = "/profile";
+    } else if (option === "Logout") {
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    }
+  };
 
-    const handleOptionClick = async (option: string) => {
-        if (option === "Profile") {
-            window.location.href = "/profile";
-        } else if (option === "Logout") {
-            await supabase.auth.signOut();
-            window.location.href = "/login";
-        }
-    };
+  const getFirstLetter = (name: string | undefined) => {
+    return name ? name.charAt(0).toUpperCase() : "";
+  };
 
-    const getFirstLetter = (name: string | undefined) => {
-        return name ? name.charAt(0).toUpperCase() : "";
-    };
-
-    return (
-        <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800 max-h-[64px]">
-            <img
-                src="/motif2.svg"
-                alt="Logo"
-                style={{ width: "40px", aspectRatio: "63 / 29" }}
-                className="md:hidden block"
-            />
-            <img
-                src="/motif-desk2.svg"
-                alt="Logo"
-                style={{ width: "120px", aspectRatio: "155 / 20" }}
-                className="md:block hidden"
-            />
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Avatar
-                                    className="cursor-pointer bg-[#1a1a1a] border border-gray-600"
-                                >
-                                    <AvatarFallback className="bg-[#1a1a1a] text-white">
-                                        {getFirstLetter(userName)}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-64 relative r-16">
-                                <DropdownMenuLabel className="text-normal">
-                                    Hi, {userName}
-                                </DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => handleOptionClick("Profile")}>
-                                    Edit Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="text-red-500" onClick={() => handleOptionClick("Logout")}>
-                                    Logout
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </TooltipTrigger>
-                </Tooltip>
-            </TooltipProvider>
-        </nav>
-    );
+  return (
+    <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800 max-h-[64px]">
+      <a
+        href="https://transfinitte.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="/motif2.svg"
+          alt="Logo"
+          style={{ width: "40px", aspectRatio: "63 / 29" }}
+          className="md:hidden block"
+        />
+        <img
+          src="/motif-desk2.svg"
+          alt="Logo"
+          style={{ width: "120px", aspectRatio: "155 / 20" }}
+          className="md:block hidden"
+        />
+      </a>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="cursor-pointer bg-[#1a1a1a] border border-gray-600">
+                  <AvatarFallback className="bg-[#1a1a1a] text-white">
+                    {getFirstLetter(userName)}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-64 relative r-16">
+                <DropdownMenuLabel className="text-normal">
+                  Hi, {userName}
+                </DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => handleOptionClick("Profile")}>
+                  Edit Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-red-500"
+                  onClick={() => handleOptionClick("Logout")}
+                >
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TooltipTrigger>
+        </Tooltip>
+      </TooltipProvider>
+    </nav>
+  );
 };
 
 export default NavBar;

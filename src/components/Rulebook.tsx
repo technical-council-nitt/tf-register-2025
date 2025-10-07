@@ -1,9 +1,4 @@
-
-
-
-
 // const Rulebook = () => {
-
 
 //     return (
 //         <div className="flex flex-col min-h-screen bg-black text-white font-nhg  p-4 ">
@@ -188,116 +183,193 @@
 //                     <p className="text-sm my-6">E-mail:<a className="underline underline-offset-4" href="mailto:dpo@razorpay.com">dpo@razorpay.com</a></p>
 //                     <p className="text-sm my-6">Grievances portal:<a className="underline underline-offset-4"  href="https://razorpay.com/grievances/">https://razorpay.com/grievances/</a></p>
 //                     <p className="font-bold my-6 text-3xl">Acceptance Details</p>
-                    // <table className="table-auto border border-gray-400 w-full text-left mb-6">
-                    //   <thead>
-                      
-                    //   </thead>
-                    //   <tbody>
-                    //     <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">Owner Id</td>
-                    //       <td className="border border-gray-400 px-4 py-2">RGOSCHcAHgvnRT</td>
-                    //     </tr>
-                    //     <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">Owner Name</td>
-                    //       <td className="border border-gray-400 px-4 py-2">ADHITYA SRIRAM</td>
-                    //     </tr>
-                    //     <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">IP Address</td>
-                    //       <td className="border border-gray-400 px-4 py-2">10.26.111.202</td>
-                    //     </tr>
-                    //     <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">Date Of Acceptance</td>
-                    //       <td className="border border-gray-400 px-4 py-2">2025-09-12 00:44:23 IST</td>
-                    //     </tr>
-                    //     <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">Signatory Name</td>
-                    //       <td className="border border-gray-400 px-4 py-2">ADHITYA SRIRAM</td>
-                    //     </tr>
-                    //      <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">Contact Number</td>
-                    //       <td className="border border-gray-400 px-4 py-2">+917047779851</td>
-                    //     </tr>
-                    //      <tr>
-                    //       <td className="border border-gray-400 px-4 py-2">Email</td>
-                    //       <td className="border border-gray-400 px-4 py-2">transfinitte@gmail.com</td>
-                    //     </tr>
-                    //   </tbody>
-                    // </table>
-                    
+// <table className="table-auto border border-gray-400 w-full text-left mb-6">
+//   <thead>
+
+//   </thead>
+//   <tbody>
+//     <tr>
+//       <td className="border border-gray-400 px-4 py-2">Owner Id</td>
+//       <td className="border border-gray-400 px-4 py-2">RGOSCHcAHgvnRT</td>
+//     </tr>
+//     <tr>
+//       <td className="border border-gray-400 px-4 py-2">Owner Name</td>
+//       <td className="border border-gray-400 px-4 py-2">ADHITYA SRIRAM</td>
+//     </tr>
+//     <tr>
+//       <td className="border border-gray-400 px-4 py-2">IP Address</td>
+//       <td className="border border-gray-400 px-4 py-2">10.26.111.202</td>
+//     </tr>
+//     <tr>
+//       <td className="border border-gray-400 px-4 py-2">Date Of Acceptance</td>
+//       <td className="border border-gray-400 px-4 py-2">2025-09-12 00:44:23 IST</td>
+//     </tr>
+//     <tr>
+//       <td className="border border-gray-400 px-4 py-2">Signatory Name</td>
+//       <td className="border border-gray-400 px-4 py-2">ADHITYA SRIRAM</td>
+//     </tr>
+//      <tr>
+//       <td className="border border-gray-400 px-4 py-2">Contact Number</td>
+//       <td className="border border-gray-400 px-4 py-2">+917047779851</td>
+//     </tr>
+//      <tr>
+//       <td className="border border-gray-400 px-4 py-2">Email</td>
+//       <td className="border border-gray-400 px-4 py-2">transfinitte@gmail.com</td>
+//     </tr>
+//   </tbody>
+// </table>
+
 //                     </p>
-             
+
 //             </div>
-      
+
 //         </div>
 //         );
 // }
 // export default Rulebook;
 
-
 const Rulebook = () => {
-    return (
-        <div className="flex flex-col min-h-screen bg-black text-white font-nhg p-4">
-            <nav className="flex justify-between bg-black items-center p-[15px] md:p-4 border-b-[1px] border-neutral-800">
-                <img src="/motif2.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
-                <img src="/motif-desk2.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
-                <img src="/register.svg" alt="Logo" style={{ width: '110px', aspectRatio: '96 / 20' }} />
-            </nav>
-            {/* <div className="flex self-start ml-4 cursor-pointer my-4 justify-center items-center"> */}
-                {/* Terms & Conditions Section */}
-                <p>
-                    <p className="text-2xl font-bold my-4">Terms & Conditions</p>
-                    <p className="text-sm my-6">Last updated on October 3rd, 2025</p>
-                    <p className="text-3xl my-6 font-bold">Introduction to Terms</p>
-                    <p className="text-sm my-6">These Terms and Conditions, along with the privacy policy or other terms, constitute a binding agreement between TransfiNITTe ("Website Owner", "we", "us", or "our") and you ("you", "your") and relate to your use of our website and services ("Services"). By using our website and availing of our Services, you agree that you have read and accepted these Terms, including the Privacy Policy.</p>
-                    <p className="text-sm my-6">We reserve the right to modify these Terms at any time without assigning any reason. It is your responsibility to periodically review these Terms to stay informed of updates. Use of this website or our Services is subject to the following terms:
-                        <ul className="list-disc ml-5">
-                            <li>Provide true, accurate, and complete information during and after registration; you are responsible for all acts done through your registered account.</li>
-                            <li>No warranty or guarantee as to the accuracy, completeness, or suitability of information/materials for any specific purpose. Usage is at your own risk.</li>
-                            <li>Website contents are proprietary; no authority to claim intellectual property rights.</li>
-                            <li>Unauthorized use may lead to action as per these Terms or applicable laws.</li>
-                            <li>Payment of charges for availing Services is required.</li>
-                            <li>Do not use the website/Services for unlawful purposes.</li>
-                            <li>Linked third-party websites are governed by their policies, not ours.</li>
-                            <li>Use of our Services means entering into a legally binding contract with us.</li>
-                        </ul>
-                    </p>
-                    <p className="text-3xl font-bold my-6">Refund Policy</p>
-                    <p className="text-sm my-6">You can claim a refund if we are unable to provide the Service. Timelines are per the specific Service you availed or as stated in our policies. Refund claims not made in the stipulated time are ineligible.</p>
-                    <p className="text-sm my-6">Notwithstanding anything contained in these Terms, neither party is liable for failures to perform under these Terms due to force majeure events.</p>
-                    <p className="text-sm my-6">These Terms and related disputes are governed by Indian law, with exclusive jurisdiction of courts in Durgapur Steel Town East, West Bengal.</p>
-                    <p className="text-sm my-6">For concerns, contact us using details on the website.</p>
-                </p>
-                {/* Refund & Cancellation Policy Section */}
-                <p>
-                    <p className="text-2xl font-bold mt-10 my-4">Refund & Cancellation Policy</p>
-                    <p className="text-sm my-6">Last updated on October 3rd, 2025</p>
-                    <p className="text-3xl font-bold my-6">Policy Overview</p>
-                    <p className="text-sm my-6">TransfiNITTe believes in helping its customers as far as possible and has a liberal cancellation policy. Cancellations are considered only if requested immediately after placing the order. Cancellation requests may not be entertained if orders have been communicated to vendors/merchants and shipping initiated.</p>
-                    <p className="text-sm my-6">We only accept refund requests if approved by our representative on a prior notice not less than 2 days before the commencement of the event.</p>
-                    {/* <p className="text-sm my-6">Report damaged/defective items to Customer Service within 7 days of receipt. If products are not as shown on site or as per expectations, report within 7 days for review and action.</p>
+  return (
+    <div className="flex flex-col min-h-screen bg-black text-white font-nhg p-4">
+      <nav className="flex justify-between bg-black items-center p-[15px] md:p-4 border-b-[1px] border-neutral-800">
+        <a
+          href="https://transfinitte.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="/motif2.svg"
+            alt="Logo"
+            style={{ width: "40px", aspectRatio: "63 / 29" }}
+            className="md:hidden block"
+          />
+          <img
+            src="/motif-desk2.svg"
+            alt="Logo"
+            style={{ width: "120px", aspectRatio: "155 / 20" }}
+            className="md:block hidden"
+          />
+        </a>
+        <img
+          src="/register.svg"
+          alt="Logo"
+          style={{ width: "110px", aspectRatio: "96 / 20" }}
+        />
+      </nav>
+      {/* <div className="flex self-start ml-4 cursor-pointer my-4 justify-center items-center"> */}
+      {/* Terms & Conditions Section */}
+      <p>
+        <p className="text-2xl font-bold my-4">Terms & Conditions</p>
+        <p className="text-sm my-6">Last updated on October 3rd, 2025</p>
+        <p className="text-3xl my-6 font-bold">Introduction to Terms</p>
+        <p className="text-sm my-6">
+          These Terms and Conditions, along with the privacy policy or other
+          terms, constitute a binding agreement between TransfiNITTe ("Website
+          Owner", "we", "us", or "our") and you ("you", "your") and relate to
+          your use of our website and services ("Services"). By using our
+          website and availing of our Services, you agree that you have read and
+          accepted these Terms, including the Privacy Policy.
+        </p>
+        <p className="text-sm my-6">
+          We reserve the right to modify these Terms at any time without
+          assigning any reason. It is your responsibility to periodically review
+          these Terms to stay informed of updates. Use of this website or our
+          Services is subject to the following terms:
+          <ul className="list-disc ml-5">
+            <li>
+              Provide true, accurate, and complete information during and after
+              registration; you are responsible for all acts done through your
+              registered account.
+            </li>
+            <li>
+              No warranty or guarantee as to the accuracy, completeness, or
+              suitability of information/materials for any specific purpose.
+              Usage is at your own risk.
+            </li>
+            <li>
+              Website contents are proprietary; no authority to claim
+              intellectual property rights.
+            </li>
+            <li>
+              Unauthorized use may lead to action as per these Terms or
+              applicable laws.
+            </li>
+            <li>Payment of charges for availing Services is required.</li>
+            <li>Do not use the website/Services for unlawful purposes.</li>
+            <li>
+              Linked third-party websites are governed by their policies, not
+              ours.
+            </li>
+            <li>
+              Use of our Services means entering into a legally binding contract
+              with us.
+            </li>
+          </ul>
+        </p>
+        <p className="text-3xl font-bold my-6">Refund Policy</p>
+        <p className="text-sm my-6">
+          You can claim a refund if we are unable to provide the Service.
+          Timelines are per the specific Service you availed or as stated in our
+          policies. Refund claims not made in the stipulated time are
+          ineligible.
+        </p>
+        <p className="text-sm my-6">
+          Notwithstanding anything contained in these Terms, neither party is
+          liable for failures to perform under these Terms due to force majeure
+          events.
+        </p>
+        <p className="text-sm my-6">
+          These Terms and related disputes are governed by Indian law, with
+          exclusive jurisdiction of courts in Durgapur Steel Town East, West
+          Bengal.
+        </p>
+        <p className="text-sm my-6">
+          For concerns, contact us using details on the website.
+        </p>
+      </p>
+      {/* Refund & Cancellation Policy Section */}
+      <p>
+        <p className="text-2xl font-bold mt-10 my-4">
+          Refund & Cancellation Policy
+        </p>
+        <p className="text-sm my-6">Last updated on October 3rd, 2025</p>
+        <p className="text-3xl font-bold my-6">Policy Overview</p>
+        <p className="text-sm my-6">
+          TransfiNITTe believes in helping its customers as far as possible and
+          has a liberal cancellation policy. Cancellations are considered only
+          if requested immediately after placing the order. Cancellation
+          requests may not be entertained if orders have been communicated to
+          vendors/merchants and shipping initiated.
+        </p>
+        <p className="text-sm my-6">
+          We only accept refund requests if approved by our representative on a
+          prior notice not less than 2 days before the commencement of the
+          event.
+        </p>
+        {/* <p className="text-sm my-6">Report damaged/defective items to Customer Service within 7 days of receipt. If products are not as shown on site or as per expectations, report within 7 days for review and action.</p>
                     <p className="text-sm my-6">For products with manufacturer warranties, refer complaints to the manufacturer. Approved refunds will be processed within 3–5 days.</p> */}
-                </p>
-            {/* </div> */}
-                            <table className="table-auto border border-gray-400 w-full text-left mb-6">
-                      <thead>
-                      
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className="border border-gray-400 px-4 py-2">Contact Person</td>
-                          <td className="border border-gray-400 px-4 py-2">ADHITYA SRIRAM</td>
-                        </tr>
-                         <tr>
-                          <td className="border border-gray-400 px-4 py-2">Contact Number</td>
-                          <td className="border border-gray-400 px-4 py-2">+917047779851</td>
-                        </tr>
-                         <tr>
-                          <td className="border border-gray-400 px-4 py-2">Email</td>
-                          <td className="border border-gray-400 px-4 py-2">transfinitte@gmail.com</td>
-                        </tr>
-                      </tbody>
-                    </table>
-        </div>
-    );
-}
+      </p>
+      {/* </div> */}
+      <table className="table-auto border border-gray-400 w-full text-left mb-6">
+        <thead></thead>
+        <tbody>
+          <tr>
+            <td className="border border-gray-400 px-4 py-2">Contact Person</td>
+            <td className="border border-gray-400 px-4 py-2">ADHITYA SRIRAM</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-400 px-4 py-2">Contact Number</td>
+            <td className="border border-gray-400 px-4 py-2">+917047779851</td>
+          </tr>
+          <tr>
+            <td className="border border-gray-400 px-4 py-2">Email</td>
+            <td className="border border-gray-400 px-4 py-2">
+              transfinitte@gmail.com
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+};
 export default Rulebook;

@@ -17,8 +17,10 @@ const Login = () => {
     return (
         <div className="flex flex-col min-h-screen bg-black text-white">
             <nav className="flex justify-between items-center p-4 md:p-6 border-b-[1px] border-neutral-800">
-                <img src="/motif-desk2.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
-                <img src="/motif-desk2.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
+                <a href="https://transfinitte.com" target="_blank" rel="noopener noreferrer">
+                    <img src="/motif-desk2.svg" alt="Logo" style={{ width: '40px', aspectRatio: '63 / 29' }} className="md:hidden block" />
+                    <img src="/motif-desk2.svg" alt="Logo" style={{ width: '120px', aspectRatio: '155 / 20' }} className="md:block hidden" />
+                </a>
             </nav>
 
             <main className="flex-grow flex flex-col justify-center items-center px-4 md:px-6">
