@@ -714,7 +714,7 @@ const Dashboard = () => {
               </h2>
               <div className="absolute bottom-0 right-0 p-6 pb-4">
                 {((team.payment_status === "Pending" ||
-                  team.payment_status === "Failed") && paymentCount <= +import.meta.env.VITE_TEAM_CAP && isLead) && (
+                  team.payment_status === "Failed") && false && paymentCount <= +import.meta.env.VITE_TEAM_CAP && isLead) && (
                     <Button
                       className="bg-white text-black rounded-[120px] font-bold hover:bg-gray-100 transition duration-300 flex items-center justify-center gap-2"
                       onClick={() => setPopUp(true)}
