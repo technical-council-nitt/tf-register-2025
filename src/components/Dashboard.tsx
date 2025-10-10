@@ -39,21 +39,43 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
+import { set } from "animejs";
 
 //import { set } from "animejs";
 // import { timeStamp } from "console";
-// const problem_statements = [
-//   { value: "1", label: "1" },
-//   { value: "2", label: "2" },
-//   { value: "3", label: "3" },
-// ];
+let problem_statements = [
+  { value: "BS1 - McKinsey & Company", label: "BS1 - McKinsey & Company",domain:"management" },
+  { value: "BCG Case Study", label: "BCG Case Study",domain:"management" },
+  { value: "BOSCH - Smart Power Management Module", label: "BOSCH - Smart Power Management Module",domain:"hardware" },
+   { value: "BHEL - PS01", label: "BHEL - PS01",domain:"hardware" },
+  { value: "BHEL - Problem Statement 2", label: "BHEL - Problem Statement 2",domain:"hardware" },
+  { value: "ZeroWings - Buck Converter", label: "ZeroWings - Buck Converter",domain:"hardware" },
+  { value: "JCB - Quick-Hitch Problem Statement", label: "JCB - Quick-Hitch Problem Statement",domain:"hardware" },
+  { value: "OptiSol - Problem Statement 1", label: "OptiSol - Problem Statement 1",domain:"software" },
+    { value: "OptiSol - AI Powered Workflow Automation", label: "OptiSol - AI Powered Workflow Automation",domain:"software" },
+        { value: "OptiSol - Problem Statement 2", label: "OptiSol - Problem Statement 2",domain:"software" },
+         { value: "ZeroWings - Thermal Human Detection", label: "ZeroWings - Thermal Human Detection",domain:"software" },
+          { value: "ZeroWings - Concrete Crack Detection", label: "ZeroWings - Concrete Crack Detection",domain:"software" },
+           { value: "ZeroWings - Agriculture Drone", label: "ZeroWings - Agriculture Drone",domain:"software" },
+            { value: "ZeroWings - Operation Lifeline", label: "ZeroWings - Operation Lifeline",domain:"software" },
+  { value: "DARE 2 DREAM Problem Statement", label: "DARE 2 DREAM Statement",domain:"entrepreneurship" },
+   { value: "Stealth AI-Problem Statement", label: "Stealth AI  - Problem Statement",domain:"software" },
+
+  { value: "CEDI - Under NAVIYA", label: "CEDI - Under NAVIYA",domain:"entrepreneurship" },
+  { value: "RVC - Track Based Problem Statement", label: "RVC - Track Based Problem Statement",domain:"entrepreneurship" },
+
+
+];
 const domains = [
   { value: "software", label: "software" },
   { value: "hardware", label: "hardware" },
   { value: "management", label: "management" },
   { value: "entrepreneurship", label: "entrepreneurship" },
 ];
-
+const foodPreferences = [
+  { value: "vegetarian", label: "Vegetarian" },
+  { value: "non-vegetarian", label: "Non-Vegetarian" },
+];
 
 type TeamMember = {
   user_id: string;
@@ -82,6 +104,9 @@ interface Order {
 }
 
 const Dashboard = () => {
+  const [filteredPS, setFilteredPS] = useState(problem_statements);
+  const [food, setFood] = useState<string | undefined>(undefined);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   const [click, setClick] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const cashfreeRef = useRef<CashfreeInstance | null>(null);
@@ -107,6 +132,9 @@ const Dashboard = () => {
   const psschema = z.object({
     problem_statement: z.string().optional(),
     domain: z.string().nonempty("Domain is required"),
+  });
+   const foodschema = z.object({
+    food: z.string().nonempty("Food preference is required"),
   });
   //  const testUpload = async () => {
   //   const testFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
@@ -173,14 +201,32 @@ const Dashboard = () => {
       domain: "",
     }
   })
+  const foodform = useForm({
+    resolver: zodResolver(foodschema),
+    defaultValues: {
+      food: "",
+     
+    }
+  })
 
+   const foodValue = foodform.watch('food');
+  useEffect(() => {
+    if (foodValue) {
+      foodform.handleSubmit(onSubmitFood)();
+    }
+  }, [foodValue])
   const domainValue = psform.watch('domain');
   useEffect(() => {
     if (domainValue) {
       psform.handleSubmit(onSubmitps)();
     }
   }, [domainValue])
-
+ const psValue = psform.watch('problem_statement');
+  useEffect(() => {
+    if (psValue) {
+      psform.handleSubmit(onSubmitps)();
+    }
+  }, [psValue])
 
   useEffect(() => {
     if (team) {
@@ -190,6 +236,14 @@ const Dashboard = () => {
       });
     }
   }, [team]);
+  
+    useEffect(() => {
+    if (food) {
+      foodform.reset({
+        food: food || "",
+      });
+    }
+  }, [food]);
 
 
   useEffect(() => {
@@ -218,6 +272,8 @@ const Dashboard = () => {
         console.log(user);
         setUserInfo(user);
         setUsername(userData?.name);
+        setUserId(userData?.user_id);
+        setFood(userData?.food);
         // form.reset({
         //   name: userData?.name || "",
         //   rollNumber: userData?.roll_number || "",
@@ -268,9 +324,28 @@ const Dashboard = () => {
       return { paymentData };
     }
 
+    // problem_statements.filter((e)=>{
+    //   return (e.domain.toLowerCase() == team?.domain.toLowerCase())
+    // })
+
     fetchDetails();
     fetchPaymentStatus();
   }, [teamId]);
+
+  useEffect(() => {
+    const watchedDomain = psform.getValues("domain") || psform.watch("domain");
+    const currentDomain = (watchedDomain as string) || team?.domain || "";
+
+    if (currentDomain) {
+      const lower = currentDomain.toLowerCase();
+      setFilteredPS(
+        problem_statements.filter((ps) => (ps.domain || "").toLowerCase() === lower)
+      );
+    } else {
+      setFilteredPS(problem_statements);
+    }
+  }, [team?.domain, psform]);
+   
 
   const init = async (): Promise<Order | undefined> => {
     try {
@@ -444,6 +519,28 @@ const Dashboard = () => {
         domain: data.domain,
       });
     }
+  }
+    const onSubmitFood = async (data: any) => {
+    console.log("called--------------------------------");
+    const { error } = await supabase.auth.getUser();
+    if (error) {
+      console.error("Error fetching user details:", error);
+      return;
+    }
+    
+
+    const { error: pserror } = await supabase
+      .from("users")
+      .update({
+       food:data.food,
+      })
+      .eq("user_id", userId)
+    if (pserror) {
+      console.error("Submission ps error:", pserror);
+      return;
+    }
+
+   
   }
   // const onMidReviewSubmit = async (data: any) => {
   //   // try {
@@ -728,11 +825,11 @@ const Dashboard = () => {
             <Form {...psform}>
               <form onSubmit={psform.handleSubmit(onSubmitps)}
 
-                className="text-white  rounded-lg shadow-md lg:w-[100%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
+                className="text-white  rounded-lg shadow-md lg:w-[100%]   md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
               >
-
+                <div className='flex flex-col w-full'> 
                 <FormField
-                  name="domain"
+                  name="domain" 
                   render={({ field }) => (
                     <FormItem className="lg:w-full">
                       <FormLabel>Domain</FormLabel>
@@ -760,8 +857,84 @@ const Dashboard = () => {
                       </FormControl>
                       <FormMessage className="text-red-500" />
                     </FormItem>
+                    
                   )}
                 />
+                <FormField
+                  name="problem_statement"
+                  render={({ field }) => (
+                    <FormItem className="lg:w-full mt-5">
+                      <FormLabel>Problem Statement</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(val) => {
+                            field.onChange(val);
+
+                          }}
+                          value={field.value}
+                          disabled={!(import.meta.env.VITE_PSACTIVE)} // Disable if not lead or payment done
+
+                        >
+                          <SelectTrigger className="bg-[#1a1a1a] border border-gray-600  rounded-md w-[80vw] md:w-[40vw] lg:w-full">
+                            <SelectValue placeholder={"Select Problem Statement"} />
+                          </SelectTrigger>
+                         <SelectContent>
+                      {filteredPS.map((problem_statement) => (
+                        <SelectItem key={problem_statement.value} value={problem_statement.value}>
+                          {problem_statement.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                    
+                  )}
+                />
+                </div>
+
+              </form>
+            </Form>
+             <Form {...foodform}>
+              <form onSubmit={foodform.handleSubmit(onSubmitFood)}
+                className="text-white  rounded-lg shadow-md lg:w-[100%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
+              >
+                <div className='flex flex-col w-full'> 
+                <FormField
+                  name="food" 
+                  render={({ field }) => (
+                    <FormItem className="lg:w-full">
+                      <FormLabel>Food Prefrence</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(val) => {
+                            field.onChange(val);
+
+                          }}
+                          value={field.value}
+                          disabled={!(import.meta.env.VITE_PSACTIVE)}  // Disable if not lead or payment done
+
+                        >
+                          <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md w-[80vw] md:w-[40vw] lg:w-full">
+                            <SelectValue placeholder={ "Select Food Preference"} />
+                          </SelectTrigger>
+                          <SelectContent className="w-[var(--radix-select-trigger-width)]">
+                            {foodPreferences.map((food) => (
+                              <SelectItem key={food.value} value={food.value}>
+                                {food.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                    
+                  )}
+                />
+               
+                </div>
 
               </form>
             </Form>
