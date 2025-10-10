@@ -58,11 +58,13 @@ let problem_statements = [
           { value: "ZeroWings - Concrete Crack Detection", label: "ZeroWings - Concrete Crack Detection",domain:"software" },
            { value: "ZeroWings - Agriculture Drone", label: "ZeroWings - Agriculture Drone",domain:"software" },
             { value: "ZeroWings - Operation Lifeline", label: "ZeroWings - Operation Lifeline",domain:"software" },
+  { value: "DARE 2 DREAM Problem Statement", label: "DARE 2 DREAM Statement",domain:"software" },
   { value: "DARE 2 DREAM Problem Statement", label: "DARE 2 DREAM Statement",domain:"entrepreneurship" },
    { value: "Stealth AI-Problem Statement", label: "Stealth AI  - Problem Statement",domain:"software" },
 
   { value: "CEDI - Under NAVIYA", label: "CEDI - Under NAVIYA",domain:"entrepreneurship" },
   { value: "RVC - Track Based Problem Statement", label: "RVC - Track Based Problem Statement",domain:"entrepreneurship" },
+  { value: "RVC - Track Based Problem Statement", label: "RVC - Track Based Problem Statement",domain:"software" },
 
 
 ];
