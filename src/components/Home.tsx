@@ -5,6 +5,19 @@ import { ArrowUpRight } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/utiils/supabase";
 import NavBar from "./Navbar";
+import { toast } from "sonner";
+
+const handleToast = () => {
+     toast("Whoops!", {
+        description: "Registration are closed, See you next year!!",
+      });
+}
+const handleProblemStatement = () => {
+     toast("Whoops!", {
+        description: "Problem Statement are not available right now",
+      });
+}
+
 
 const Home = () => {
     const [isLoggedIn, setLoggedIn] = useState(false);
@@ -93,20 +106,14 @@ const Home = () => {
                                 <div className="space-y-4">
                                     <Button
                                         className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                                        onClick={() =>
-                                            (window.location.href =
-                                                "/create-team")
-                                        }
+                                        onClick={handleToast}
                                     >
                                         <span>Create Team</span>
                                         <ArrowUpRight className="h-5 w-5" />
                                     </Button>
                                     <Button
                                         className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
-                                        onClick={() =>
-                                            (window.location.href =
-                                                "/join-team")
-                                        }
+                                        onClick={handleToast}
                                     >
                                         <span>Join Team</span>
                                         <ArrowUpRight className="h-5 w-5" />
@@ -124,14 +131,26 @@ const Home = () => {
                                 <ArrowUpRight className="h-5 w-5" />
                             </Button>
                         )
-                    ) : (
+                    ) : (<div>
                         <Button
                             className="w-full py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-200 transition duration-300 flex items-center justify-center gap-2"
                             onClick={() => (window.location.href = "/login")}
                         >
                             <span>Login</span>
+
                             <ArrowUpRight className="h-5 w-5" />
                         </Button>
+                        <Button
+                            className="w-full mt-6 py-3 bg-white text-white rounded-lg bg-transparent font-bold hover:underline transition duration-300 flex items-center justify-center gap-2"
+                            onClick={() =>
+                                    (window.location.href = "https://transfinitte.notion.site/")}
+                        >
+                            <span>Rulebook</span>
+
+                            <ArrowUpRight className="h-5 w-5" />
+                        </Button>
+                        </div>
+                        
                     )}
                 </div>
             </main>
