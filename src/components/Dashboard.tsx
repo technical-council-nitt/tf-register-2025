@@ -858,7 +858,7 @@ const Dashboard = () => {
 
                           }}
                           value={field.value}
-                          disabled={!(import.meta.env.VITE_PSACTIVE)} // Disable if not lead or payment done
+                          disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
 
                         >
                           <SelectTrigger className="bg-[#1a1a1a] border border-gray-600  rounded-md w-[80vw] md:w-[40vw] lg:w-full">
@@ -899,7 +899,7 @@ const Dashboard = () => {
 
                           }}
                           value={field.value}
-                          disabled={!(import.meta.env.VITE_PSACTIVE)} // Disable if not lead or payment done
+                          disabled={!(isLead && team.payment_status === "Pending")} // Disable if not lead or payment done
 
                         >
                           <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md w-[80vw] md:w-[40vw] lg:w-full">
