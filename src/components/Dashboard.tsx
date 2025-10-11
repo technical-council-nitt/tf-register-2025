@@ -1051,7 +1051,14 @@ const Dashboard = () => {
             )}
           />
           <div className="w-full flex md:flex-row-reverse">
-            <Button type="submit" className="md:px-16 md:w-auto mt-12 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
+            <Button type="submit"  className="
+      md:px-16 md:w-auto mt-12 w-full py-4 px-4 bg-white text-black rounded-lg 
+      font-bold transition duration-150 ease-in-out
+      
+      /* ENHANCED CLICK FEEDBACK STYLES */
+      hover:bg-gray-300 
+      active:bg-gray-500 active:shadow-inner active:scale-[0.99]
+    ">
               Submit Mid Review
             </Button>
           </div>
@@ -1077,7 +1084,14 @@ const Dashboard = () => {
             )}
           />
           <div className="w-full flex md:flex-row-reverse">
-            <Button type="submit" className="md:px-14 md:w-auto mt-12 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
+            <Button type="submit"  className="
+      md:px-16 md:w-auto mt-12 w-full py-4 px-4 bg-white text-black rounded-lg 
+      font-bold transition duration-150 ease-in-out
+      
+      /* ENHANCED CLICK FEEDBACK STYLES */
+      hover:bg-gray-300 
+      active:bg-gray-500 active:shadow-inner active:scale-[0.99]
+    ">
               Submit Final Review
             </Button>
           </div>
