@@ -683,6 +683,10 @@ const Dashboard = () => {
         return;
       }
     }
+    
+    
+    
+    alert("Mid Review Submitted Successfully");
   };
 
   const onFinalReviewSubmit = async (data: any) => {
