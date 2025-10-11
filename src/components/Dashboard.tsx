@@ -631,6 +631,15 @@ const Dashboard = () => {
     }
 
     const file = data.file[0];
+    const MAX_SIZE = 15 * 1024 * 1024; // 15MB
+     if (file.size > MAX_SIZE) {
+      toast("Size Exceeded", {
+          description: "File size should be less than 15MB.",
+        });
+      setMidReviewBtnLoad("Submit Mid Review");
+      setLoad(false);
+      return;
+    }
     const filename = `midreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
 
     const { data: uploadData, error: uploadError } = await supabase.storage
@@ -707,6 +716,16 @@ const Dashboard = () => {
     }
 
     const file = data.file[0];
+
+    const MAX_SIZE = 15 * 1024 * 1024; // 15MB
+     if (file.size > MAX_SIZE) {
+      toast("Size Exceeded", {
+          description: "File size should be less than 15MB.",
+        });
+      setMidReviewBtnLoad("Submit Mid Review");
+      setLoad(false);
+      return;
+    }
     const filename = `finalreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}`;
 
     const { data: uploadData, error: uploadError } = await supabase.storage
