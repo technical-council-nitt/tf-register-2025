@@ -617,6 +617,7 @@ const Dashboard = () => {
     }
   };
   const onMidReviewSubmit = async (data: any) => {
+    alert("Your File is being submitted.Please do not refresh or close the page.");
     // try {
     const { error } = await supabase.auth.getUser();
     if (error) {
