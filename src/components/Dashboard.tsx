@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
+import { set } from "animejs";
 // import { set } from "animejs";
 
 //import { set } from "animejs";
@@ -175,6 +176,8 @@ interface Order {
 }
 
 const Dashboard = () => {
+  const [Load, setLoad] = useState(false);
+  const[midreviewBtnLoad,setMidReviewBtnLoad]=useState("Submit Mid Review");
   const [filteredPS, setFilteredPS] = useState(problem_statements);
   const [food, setFood] = useState<string | undefined>(undefined);
   const [userId, setUserId] = useState<string | undefined>(undefined);
@@ -614,10 +617,12 @@ const Dashboard = () => {
     if (pserror) {
       console.error("Submission ps error:", pserror);
       return;
-    }
+    } 
   };
   const onMidReviewSubmit = async (data: any) => {
-    alert("Your File is being submitted.Please do not refresh or close the page.");
+    setMidReviewBtnLoad("Submitting...");
+    setLoad(true);
+   
     // try {
     const { error } = await supabase.auth.getUser();
     if (error) {
@@ -686,8 +691,11 @@ const Dashboard = () => {
     }
     
     
-    
-    alert("Mid Review Submitted Successfully");
+    setMidReviewBtnLoad("Submit Mid Review");
+    setLoad(false);
+    toast("Mid Review Submitted Successfully", {
+          description: "Submission updated.",
+        });
   };
 
   const onFinalReviewSubmit = async (data: any) => {
@@ -1056,7 +1064,7 @@ const Dashboard = () => {
             )}
           />
           <div className="w-full flex md:flex-row-reverse">
-            <Button type="submit"  className="
+            <Button type="submit" disabled={Load} className="
       md:px-16 md:w-auto mt-12 w-full py-4 px-4 bg-white text-black rounded-lg 
       font-bold transition duration-150 ease-in-out
       
@@ -1064,7 +1072,7 @@ const Dashboard = () => {
       hover:bg-gray-300 
       active:bg-gray-500 active:shadow-inner active:scale-[0.99]
     ">
-              Submit Mid Review
+              {midreviewBtnLoad}
             </Button>
           </div>
         </form>
