@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
+import { link } from "fs";
 
 // import { set } from "animejs";
 
@@ -178,6 +179,7 @@ interface Order {
 const Dashboard = () => {
   const [Load, setLoad] = useState(false);
   const[midreviewBtnLoad,setMidReviewBtnLoad]=useState("Submit Mid Review");
+  const[finalreviewBtnLoad,setfinalReviewBtnLoad]=useState("Submit Final Document");
   const [filteredPS, setFilteredPS] = useState(problem_statements);
   const [food, setFood] = useState<string | undefined>(undefined);
   const [userId, setUserId] = useState<string | undefined>(undefined);
@@ -246,6 +248,7 @@ const Dashboard = () => {
       teamName: "",
       timeStamp: "",
       file: null,
+      link: "",
     },
   });
 
@@ -708,6 +711,8 @@ const Dashboard = () => {
   };
 
   const onFinalReviewSubmit = async (data: any) => {
+    setfinalReviewBtnLoad("Submitting...");
+    setLoad(true);
     // try {
     const { error } = await supabase.auth.getUser();
     if (error) {
@@ -784,6 +789,11 @@ const Dashboard = () => {
         return;
       }
     }
+    setfinalReviewBtnLoad("Submit Final Document");
+    setLoad(false);
+    toast("Final Document Submitted Successfully", {
+          description: "Submission updated.",
+        });
   };
 
   const handleGenerateNewTeamId = async () => {
@@ -1109,7 +1119,19 @@ const Dashboard = () => {
               <FormItem>
                 <FormLabel>Upload Final Review File (PPT/PPTX)</FormLabel>
                 <FormControl>
-                  <Input type="file" accept=".ppt,.pptx" onChange={e => field.onChange(e.target.files)} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                  <Input type="file" accept=".ppt,.pptx, .pdf, .docx" onChange={e => field.onChange(e.target.files)} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                </FormControl>
+                <FormMessage className="text-red-500" />
+              </FormItem>
+            )}
+          />
+           <FormField
+            name="link"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Upload Github Link</FormLabel>
+                <FormControl>
+                  <Input type="link" onChange={e => field.onChange(e.target.value)} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
                 </FormControl>
                 <FormMessage className="text-red-500" />
               </FormItem>
@@ -1124,7 +1146,7 @@ const Dashboard = () => {
       hover:bg-gray-300 
       active:bg-gray-500 active:shadow-inner active:scale-[0.99]
     ">
-              Submit Final Review
+              {finalreviewBtnLoad}
             </Button>
           </div>
         </form>
