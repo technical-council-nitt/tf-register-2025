@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { VscDebugRestart } from "react-icons/vsc";
 import { toast } from "sonner";
+import { link } from "fs";
 // import { link } from "fs"; 
 
 // import { set } from "animejs";
@@ -727,7 +728,7 @@ const Dashboard = () => {
       toast("Size Exceeded", {
           description: "File size should be less than 15MB.",
         });
-      setMidReviewBtnLoad("Submit Mid Review");
+      setfinalReviewBtnLoad("Submit Final Review");
       setLoad(false);
       return;
     }
@@ -761,6 +762,7 @@ const Dashboard = () => {
           domain: team?.domain,
           file_path: uploadData.path,
           timestamp: new Date().toISOString(),
+          link : data.link,
         })
         .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
 
@@ -782,6 +784,7 @@ const Dashboard = () => {
             file_path: uploadData.path,
             domain: team?.domain,
             problem_statement: team?.problem_statement,
+            link : data.link,
           },
         ]);
       if (dbError) {
@@ -1131,7 +1134,7 @@ const Dashboard = () => {
               <FormItem>
                 <FormLabel>Upload Github Link</FormLabel>
                 <FormControl>
-                  <Input type="link" onChange={e => field.onChange(e.target.value)} className="bg-[#1a1a1a] border -mt-2 border-gray-600 rounded-md p-2" />
+                  <Input type="link" onChange={e => field.onChange(e.target.value)} className="bg-[#1a1a1a] border mt-2 border-gray-600 rounded-md p-2" />
                 </FormControl>
                 <FormMessage className="text-red-500" />
               </FormItem>
