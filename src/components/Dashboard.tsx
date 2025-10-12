@@ -774,7 +774,7 @@ const Dashboard = () => {
           timestamp: new Date().toISOString(),
           link : gitlink,
         })
-        .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
+        .eq("team_name", `${team?.name}-${team?.team_id}.pptx`); // Use .eq('team_id', team?.id) if available
 
       if (updateError) {
         console.error("Update error:", updateError);
