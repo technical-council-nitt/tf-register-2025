@@ -204,6 +204,12 @@ const Dashboard = () => {
   // gender: z.string().nonempty("Gender is required"),
     timeStamp: z.string(),
     file: z.any().refine((fileList) => fileList && fileList.length === 1, "File is required"),
+    link: z
+    .string({
+      // required_error: "Github link is required.", // Error if field is missing
+    })
+    // .url("Must be a valid URL (include 'http://' or 'https://').") // Ensures it's a URL format
+    // .min(1, "Github link is required."), // Ensures it's not an empty string
   });
 
   const psschema = z.object({
@@ -249,7 +255,12 @@ const Dashboard = () => {
       teamName: "",
       timeStamp: "",
       file: null,
-      link: "",
+      link: "",//z
+    // .string({
+    //   required_error: "Github link is required.",
+    // })
+    // .url("Must be a valid URL (include 'http://' or 'https://').")
+    // .min(1, "Github link is required."),
     },
   });
 
@@ -722,7 +733,7 @@ const Dashboard = () => {
     }
 
     const file = data.file[0];
-
+    const gitlink = data.link;
     const MAX_SIZE = 15 * 1024 * 1024; // 15MB
      if (file.size > MAX_SIZE) {
       toast("Size Exceeded", {
@@ -762,7 +773,7 @@ const Dashboard = () => {
           domain: team?.domain,
           file_path: uploadData.path,
           timestamp: new Date().toISOString(),
-          link : data.link,
+          link : gitlink,
         })
         .eq("team_name", `${team?.name}-${team?.team_id}`); // Use .eq('team_id', team?.id) if available
 
@@ -784,7 +795,7 @@ const Dashboard = () => {
             file_path: uploadData.path,
             domain: team?.domain,
             problem_statement: team?.problem_statement,
-            link : data.link,
+            link : gitlink,
           },
         ]);
       if (dbError) {
@@ -1116,10 +1127,11 @@ const Dashboard = () => {
           onSubmit={finalform.handleSubmit(onFinalReviewSubmit)}
           className="text-white  rounded-lg shadow-md lg:w-[100%]  md:w-[80vw] w-full space-y-2 mt-6 flex justify-center items-center  lg:justify-normal"
         >
+          <div className="flex flex-col w-full"> 
           <FormField
             name="file"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="">
                 <FormLabel>Upload Final Review File (PPT/PPTX)</FormLabel>
                 <FormControl>
                   <Input type="file" accept=".ppt,.pptx, .pdf, .docx" onChange={e => field.onChange(e.target.files)} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
@@ -1128,13 +1140,13 @@ const Dashboard = () => {
               </FormItem>
             )}
           />
-           <FormField
+           <FormField 
             name="link"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full p-0 m-0" >
                 <FormLabel>Upload Github Link</FormLabel>
                 <FormControl>
-                  <Input type="link" onChange={e => field.onChange(e.target.value)} className="bg-[#1a1a1a] border mt-2 border-gray-600 rounded-md p-2" />
+                  <Input type="link" onChange={e => field.onChange(e.target.value)} className="bg-[#1a1a1a] border md:mt-1 lg:mt-2 border-gray-600 rounded-md p-2" />
                 </FormControl>
                 <FormMessage className="text-red-500" />
               </FormItem>
@@ -1152,6 +1164,8 @@ const Dashboard = () => {
               {finalreviewBtnLoad}
             </Button>
           </div>
+           </div>
+
         </form>
       </Form>
     }
