@@ -742,7 +742,7 @@ const Dashboard = () => {
       setLoad(false);
       return;
     }
-    const filename = `finalreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}.pptx`;
+    const filename = `finalreview/${team?.domain}/${team?.problem_statement}/${team?.name}-${team?.team_id}.pdf`;
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("midreview_bucket")
