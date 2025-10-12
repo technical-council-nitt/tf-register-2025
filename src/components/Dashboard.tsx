@@ -1143,7 +1143,7 @@ const Dashboard = () => {
             name="link"
             render={({ field }) => (
               <FormItem className="w-full p-0 m-0" >
-                <FormLabel>Upload Github Link</FormLabel>
+                <FormLabel>Upload Submission Link</FormLabel>
                 <FormControl>
                   <Input type="link" onChange={e => field.onChange(e.target.value)} className="bg-[#1a1a1a] border md:mt-1 lg:mt-2 border-gray-600 rounded-md p-2" />
                 </FormControl>
