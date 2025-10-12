@@ -1133,7 +1133,7 @@ const Dashboard = () => {
               <FormItem className="">
                 <FormLabel>Upload Final Review File (PPT/PPTX)</FormLabel>
                 <FormControl>
-                  <Input type="file" accept=".ppt,.pptx" onChange={e => field.onChange(e.target.files)} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
+                  <Input type="file" accept=".pdf" onChange={e => field.onChange(e.target.files)} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
                 </FormControl>
                 <FormMessage className="text-red-500" />
               </FormItem>
