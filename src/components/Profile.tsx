@@ -22,6 +22,7 @@ import {
 import { Loader2 } from "lucide-react";
 import WaterDropGrid from "./WaterDropGrid";
 import { supabase } from "@/utiils/supabase";
+import { apiClient } from "@/utiils/api";
 
 
 const genders = [
@@ -98,6 +99,7 @@ const schema = z.object({
 const Profile = () => {
   const [_, setUserDetails] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -119,14 +121,14 @@ const Profile = () => {
           error
         } = await supabase.auth.getUser();
 
-        if(error) {
+        if(error || !user) {
           console.error("Error fetching user details:", error);
           window.location.href = "/login";
           return;
-
         }
 
-        const { data: userData } = await supabase.from("users").select("*").eq("user_id", user?.id).single();
+        const userResponse = await apiClient.getUserById(user.id);
+        const userData = userResponse.data;
 
         if(userData) {
           setUserDetails(userData);
@@ -150,31 +152,35 @@ const Profile = () => {
   }, [form]);
 
   const onSubmit = async (data: any) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if(error) {
+      if(error || !user) {
         console.error("Error fetching user details:", error);
+        setIsSubmitting(false);
         return;
       }
 
-      const { error: upsertError } = await supabase.from("users").update({
-        user_id: user?.id,
+      const updateResponse = await apiClient.updateProfile({
         name: data.name,
         roll_number: data.rollNumber,
         email: data.personalEmail,
         hostel: data.hostel,
         mess: data.mess,
         gender: data.gender,
-      }).eq("user_id", user?.id);
+      });
 
-      if(upsertError) {
-        console.error("Error updating user details:", upsertError);
+      if(!updateResponse.success) {
+        console.error("Error updating user details:", updateResponse.message);
+        setIsSubmitting(false);
         return;
       }
 
       window.location.href = "/";
     } catch (error) {
       console.error("Error submitting the form:", error);
+      setIsSubmitting(false);
     }
   };
 
@@ -338,8 +344,19 @@ const Profile = () => {
                 )}
               />
               <div className="w-full flex md:flex-row-reverse">
-                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
-                  Proceed
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Saving Profile...</span>
+                    </>
+                  ) : (
+                    "Proceed"
+                  )}
                 </Button>
               </div>
             </form>

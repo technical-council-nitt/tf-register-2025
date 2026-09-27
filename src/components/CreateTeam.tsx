@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
 import { supabase } from "@/utiils/supabase";
+import { apiClient } from "@/utiils/api";
 import NavBar from "./Navbar";
 import { toast } from "sonner";
 
 const CreateTeam = () => {
     const [userName, setUsername] = useState<string | undefined>(undefined);
     const [userInfo, setUserInfo] = useState<any | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -17,20 +19,14 @@ const CreateTeam = () => {
                     data: { user },
                     error: userError,
                 } = await supabase.auth.getUser();
-                if (userError) {
-                    console.error(userError);
+                if (userError || !user) {
+                    if (userError) console.error(userError);
                     return;
                 }
-                const { data: userData, error: userDataError } = await supabase
-                    .from("users")
-                    .select("*")
-                    .eq("user_id", user?.id)
-                    .single();
-                if (userDataError) {
-                    console.error(userDataError);
-                    return;
+                const response = await apiClient.getUserById(user.id);
+                if (response.success && response.data) {
+                    setUsername(response.data.name);
                 }
-                setUsername(userData?.name);
                 setUserInfo(user);
             } catch (error) {
                 console.error(error);
@@ -39,71 +35,41 @@ const CreateTeam = () => {
         fetchUser();
     }, []);
 
-    const generate_team_id = async () => {
-        let teamId;
-        let isUnique = false;
-
-        while (!isUnique) {
-            teamId = Math.floor(100000 + Math.random() * 900000).toString();
-
-            const { data } = await supabase
-                .from("teams")
-                .select("team_id")
-                .eq("team_id", teamId);
-
-            if (!data || data.length === 0) {
-                isUnique = true;
-            }
-        }
-
-        return teamId;
-    };
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
         const formData = new FormData(e.target as HTMLFormElement);
         const data = Object.fromEntries(formData.entries());
-        const teamId = await generate_team_id();
 
-        console.log("This is the team id: ", teamId);
+        setIsSubmitting(true);
+        try {
+            const response = await apiClient.createTeam({
+                name: data.name as string,
+                contactNumber: data.contactNumber as string,
+                leader_email: userInfo?.email,
+                leader_user_id: userInfo?.id,
+            });
 
-        const { data: teamData, error: teamError } = await supabase.from("teams").select("*").eq("name", data.name);
+            if (!response.success) {
+                toast("Whoops!", {
+                    description: response.message || "Error creating team. Please try again.",
+                });
+                setIsSubmitting(false);
+                return;
+            }
 
-        if (teamError) {
-            console.error(teamError);
+            toast.success("Team created successfully!");
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 800);
+        } catch (error: any) {
+            console.error("Error creating team:", error);
             toast("Whoops!", {
                 description: "Error creating team. Please try again.",
             });
-            return;
+            setIsSubmitting(false);
         }
-
-        if (teamData && teamData.length > 0) {
-            toast("Whoops!", {
-                description: "A Team already exists with that name. Please try another name.",
-            });
-            return;
-        }
-
-        const { error } = await supabase.rpc("register_team_and_user", {
-            team_name: data.name,
-            leader_email: userInfo.email,
-            leader_user_id: userInfo.id,
-            contact_number: data.contactNumber,
-            user_email_param: userInfo.email,
-            new_team_id: teamId,
-            problem_statement : null,
-            domain : null,
-        });
-
-        if (error) {
-            console.error(error);
-            toast("Whoops!", {
-                description: "Error creating team. Please try again.",
-            });
-            return;
-        }
-
-        window.location.href = "/";
     };
 
     return (
@@ -128,6 +94,7 @@ const CreateTeam = () => {
                                 id="name"
                                 name="name"
                                 required
+                                disabled={isSubmitting}
                                 placeholder="Enter team name"
                                 className="bg-[#2a2a2a] text-white border border-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
@@ -147,6 +114,7 @@ const CreateTeam = () => {
                                 id="contactNumber"
                                 name="contactNumber"
                                 required
+                                disabled={isSubmitting}
                                 placeholder="Enter contact number"
                                 className="bg-[#2a2a2a] text-white border border-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
@@ -154,10 +122,20 @@ const CreateTeam = () => {
 
                         <Button
                             type="submit"
-                            className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2"
+                            disabled={isSubmitting}
+                            className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition duration-200"
                         >
-                            <span>Create Team</span>
-                            <ArrowUpRight className="h-5 w-5" />
+                            {isSubmitting ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    <span>Creating Team...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>Create Team</span>
+                                    <ArrowUpRight className="h-5 w-5" />
+                                </>
+                            )}
                         </Button>
                     </form>
                 </div>
