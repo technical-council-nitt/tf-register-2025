@@ -22,6 +22,8 @@ import {
 import { Loader2 } from "lucide-react";
 import WaterDropGrid from "./WaterDropGrid";
 import { supabase } from "@/utiils/supabase";
+import { apiClient } from "@/utiils/api";
+import { getYearOfStudy } from "@/utiils/yearOfStudy";
 
 
 const genders = [
@@ -89,15 +91,16 @@ type User = {
 const schema = z.object({
   name: z.string().min(1, "Full Name is required"),
   rollNumber: z.string().length(9, "Roll Number must be exactly 9 digits").regex(/^\d+$/, "Roll Number must contain only digits"),
-  personalEmail: z.string().email("Invalid email address"),
+  personalEmail: z.string().email("Invalid personal email address"),
   hostel: z.string().nonempty("Hostel is required"),
   gender: z.string().nonempty("Gender is required"),
   mess: z.string().nonempty("Mess is required"),
 });
 
 const Profile = () => {
-  const [_, setUserDetails] = useState<User | null>(null);
+  const [userDetails, setUserDetails] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -119,23 +122,36 @@ const Profile = () => {
           error
         } = await supabase.auth.getUser();
 
-        if(error) {
+        if(error || !user) {
           console.error("Error fetching user details:", error);
           window.location.href = "/login";
           return;
-
         }
 
-        const { data: userData } = await supabase.from("users").select("*").eq("user_id", user?.id).single();
+        const userResponse = await apiClient.getUserById(user.id);
+        const userData = userResponse.data;
 
         if(userData) {
           setUserDetails(userData);
+          const rawGender = (userData?.gender || "").toLowerCase();
+          const mappedGender = rawGender === "m" || rawGender === "male"
+            ? "male"
+            : rawGender === "f" || rawGender === "female"
+            ? "female"
+            : rawGender === "other" || rawGender === "others"
+            ? "other"
+            : "";
+
+          // Keep email field empty if it was the college SSO @nitt.edu email, so user enters their personal email
+          const currentEmail = userData?.email || "";
+          const initialPersonalEmail = currentEmail.endsWith("@nitt.edu") ? "" : currentEmail;
+
           form.reset({
             name: userData?.name || "",
             rollNumber: userData?.roll_number || "",
-            personalEmail: userData?.email || "",
+            personalEmail: initialPersonalEmail,
             hostel: userData?.hostel || "",
-            gender: userData?.gender || "",
+            gender: mappedGender,
             mess: userData?.mess || "",
           });
         }
@@ -150,31 +166,35 @@ const Profile = () => {
   }, [form]);
 
   const onSubmit = async (data: any) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if(error) {
+      if(error || !user) {
         console.error("Error fetching user details:", error);
+        setIsSubmitting(false);
         return;
       }
 
-      const { error: upsertError } = await supabase.from("users").update({
-        user_id: user?.id,
+      const updateResponse = await apiClient.updateProfile({
         name: data.name,
         roll_number: data.rollNumber,
         email: data.personalEmail,
         hostel: data.hostel,
         mess: data.mess,
         gender: data.gender,
-      }).eq("user_id", user?.id);
+      });
 
-      if(upsertError) {
-        console.error("Error updating user details:", upsertError);
+      if(!updateResponse.success) {
+        console.error("Error updating user details:", updateResponse.message);
+        setIsSubmitting(false);
         return;
       }
 
       window.location.href = "/";
     } catch (error) {
       console.error("Error submitting the form:", error);
+      setIsSubmitting(false);
     }
   };
 
@@ -203,9 +223,16 @@ const Profile = () => {
             <img src="/left-arrow.svg" alt="Logo" style={{ width: '15px', aspectRatio: '13 / 10' }} />
             <a href="/" className="text-neutral-500 text-sm self-center pl-2 hover:text-white transition-[1s]">GO BACK</a>
           </div>
-          <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">Complete your Application</h1>
+          <h1 className="md:text-2xl text-3xl ml-8 mb-4 text-white md:text-left w-full text-left">
+            {userDetails?.hostel ? "Edit Profile" : "Complete your Application"}
+          </h1>
           <p className="md:text-xs mb-4 ml-4 text-left md:text-sm text-white">
-            Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our <a href="/rulebook" className="underline underline-offset-4"> Privacy Policy</a>
+            {userDetails?.hostel
+              ? "Update your personal details and preferences for TransfiNITTe 2025."
+              : "Please enter your details to attend TransfiNITTe 2025 Hackathon. By entering your information, you acknowledge you have read our "}
+            {!userDetails?.hostel && (
+              <a href="/rulebook" className="underline underline-offset-4"> Privacy Policy</a>
+            )}
           </p>
           <Form {...form}>
             <form
@@ -229,15 +256,30 @@ const Profile = () => {
               {/* Roll Number */}
               <FormField
                 name="rollNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Roll Number</FormLabel>
-                    <FormControl>
-                      <Input type="text" placeholder="Enter Roll Number" {...field} className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2" />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const yearInfo = getYearOfStudy(field.value);
+                  return (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <FormLabel>Roll Number</FormLabel>
+                        {yearInfo.yearName && (
+                          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                            🎓 {yearInfo.yearName} (Batch &apos;{yearInfo.batchYear})
+                          </span>
+                        )}
+                      </div>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Enter Roll Number (e.g. 112125005)"
+                          {...field}
+                          className="bg-[#1a1a1a] border mt-0 border-gray-600 rounded-md p-2"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  );
+                }}
               />
 
               {/* Personal Email */}
@@ -247,8 +289,16 @@ const Profile = () => {
                   <FormItem>
                     <FormLabel>Personal Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Enter your personal email" {...field} className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2" disabled />
+                      <Input
+                        type="email"
+                        placeholder="Enter your personal email (e.g. Gmail)"
+                        {...field}
+                        className="bg-[#1a1a1a] mt-0 border border-gray-600 rounded-md p-2"
+                      />
                     </FormControl>
+                    <p className="text-[11px] text-neutral-400">
+                      Official hackathon notifications and event passes will be sent here.
+                    </p>
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
@@ -263,7 +313,7 @@ const Profile = () => {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
                           <SelectValue placeholder="Select Hostel" />
@@ -291,7 +341,7 @@ const Profile = () => {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
                           <SelectValue placeholder="Select Mess" />
@@ -319,7 +369,7 @@ const Profile = () => {
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                       >
                         <SelectTrigger className="bg-[#1a1a1a] border border-gray-600 rounded-md">
                           <SelectValue placeholder="Select Gender" />
@@ -338,8 +388,19 @@ const Profile = () => {
                 )}
               />
               <div className="w-full flex md:flex-row-reverse">
-                <Button type="submit" className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300">
-                  Proceed
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="md:px-16 md:w-auto mt-4 w-full py-4 px-4 bg-white text-black rounded-lg font-bold hover:bg-gray-300 transition duration-300 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Saving Profile...</span>
+                    </>
+                  ) : (
+                    "Proceed"
+                  )}
                 </Button>
               </div>
             </form>

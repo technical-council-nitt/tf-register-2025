@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/anshul1310/tf-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: PORT
+          value: "8000"
+        - name: DATABASE_URL
+          value: "postgresql://tf_admin:tf_password@postgres:5432/tf_register?sslmode=disable"
+        - name: PG_URL
+          value: "postgresql://tf_admin:tf_password@postgres:5432/tf_register?sslmode=disable"
+        - name: JWT_SECRET
+          value: "my-super-secret-key"
+        - name: ALLOWED_ORIGINS
+          value: "https://tf-register-2025-rr5l.vercel.app,https://tf-register-frontend.netlify.app"
+        - name: VITE_PROD_URL_FRONTEND
+          value: "https://tf-register-2025-rr5l.vercel.app"
+        - name: TEAM_CAP
+          value: "50"
+        - name: PAYMENT_AMOUNT
+          value: "200"
+        - name: CASHFREE_ENV
+          value: "PRODUCTION"
+        - name: CASHFREE_API_VERSION
+          value: "2023-08-01"
+        - name: CASHFREE_APP_ID
+          value: ""
+        - name: CASHFREE_SECRET_KEY
+          value: ""
+        - name: DAUTH_CLIENT_ID
+          value: "IFNha_96MvZs0GB6"
+        - name: DAUTH_CLIENT_SECRET
+          value: ".5eti.jF12xBsq6bdSs7ByJsZqd9g_TW"
+        - name: DAUTH_REDIRECT_URI
+          value: "https://tf-register-2025-rr5l.vercel.app/login"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
